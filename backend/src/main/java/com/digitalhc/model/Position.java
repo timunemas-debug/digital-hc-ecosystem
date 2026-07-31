@@ -28,6 +28,6 @@ public class Position {
 
     @ManyToOne
     @JoinColumn(name = "department_id")
-    private Department departement;
+    private Department department;
 
 }
