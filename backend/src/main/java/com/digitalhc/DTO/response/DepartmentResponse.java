@@ -1,8 +1,6 @@
 package com.digitalhc.DTO.response;
 
-
-import com.digitalhc.model.EmployeeStatus;
-import com.digitalhc.model.Role;
+import com.digitalhc.model.DepartementName;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,9 +11,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
-
-    private String email;
-    private Role role;
-    private EmployeeStatus status;
+public class DepartmentResponse {
+    
+    private DepartementName departementName;
+    private String deskription;
 }

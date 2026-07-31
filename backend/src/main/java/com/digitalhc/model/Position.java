@@ -24,7 +24,7 @@ public class Position {
 
     private String positionName;
 
-    private Long jobLevel;
+    private JobLevel jobLevel;
 
     @ManyToOne
     @JoinColumn(name = "department_id")

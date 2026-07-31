@@ -1,9 +1,5 @@
 package com.digitalhc.DTO.response;
 
-
-import com.digitalhc.model.EmployeeStatus;
-import com.digitalhc.model.Role;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
-
-    private String email;
-    private Role role;
-    private EmployeeStatus status;
+public class AttendanceResponse {
+    
+    private String attendanceDate;
+    private double checkIn;
+    private double checkOut;
+    private double lateMinutes;
 }
