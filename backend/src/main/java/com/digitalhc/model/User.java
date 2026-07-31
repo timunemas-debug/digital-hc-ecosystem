@@ -31,6 +31,5 @@ public class User {
     @JoinColumn(name = "employee_id", unique = true)
     private Employee employee;
 
-    private String statusAt;
-    private String updateAt;
+    private EmployeeStatus status;
 }

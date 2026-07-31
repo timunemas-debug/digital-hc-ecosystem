@@ -31,6 +31,7 @@ public class Attendance {
     private String attendanceDate;
     private double checkIn;
     private double checkOut;
+    private double lateMinutes;
 
     @Enumerated(EnumType.STRING)
     private AttendanceStatus attendanceStatus;
