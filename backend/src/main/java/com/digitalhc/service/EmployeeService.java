@@ -1,11 +1,18 @@
 package com.digitalhc.service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.digitalhc.DTO.request.EmployeeRequest;
 import com.digitalhc.DTO.response.EmployeeResponse;
+import com.digitalhc.DTO.response.UpdateEmployeeResponse;
+import com.digitalhc.exception.ResourceNotFound;
 import com.digitalhc.mapper.EmployeeMapper;
+import com.digitalhc.mapper.UpdateEmployeeMapper;
 import com.digitalhc.model.Employee;
+import com.digitalhc.model.EmployeeStatus;
 import com.digitalhc.repository.EmployeeRepository;
 
 @Service
@@ -13,17 +20,85 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
+    private final UpdateEmployeeMapper updateEmployeeMapper;
 
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper){
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, UpdateEmployeeMapper updateEmployeeMapper){
         this.employeeRepository = employeeRepository;
         this.employeeMapper = employeeMapper;
+        this.updateEmployeeMapper = updateEmployeeMapper;
     }
 
     public EmployeeResponse addEmployee(EmployeeRequest request){
-        employeeRepository.existsByNamaLengkapEmployee(request.getNamaLengkapEmployee());
+
+        if(employeeRepository.existsByNamaLengkapEmployee(request.getNamaLengkapEmployee())){
+            throw new IllegalArgumentException("Nama tersebut sudah digunakan!");
+        }
 
         Employee employee = employeeMapper.toEntity(request);
 
         return employeeMapper.toResponse(employeeRepository.save(employee));
+    }
+
+    public Employee getEmployeeById(Long employeeId){
+        return employeeRepository.findById(employeeId)
+                    .orElseThrow(() -> new ResourceNotFound("Employee dengan id tersebut tidak ada!"));
+    }
+
+    public EmployeeResponse getEmployeeResponseById(Long employeeId){
+
+        Employee employee = getEmployeeById(employeeId);
+
+        return employeeMapper.toResponse(employee);
+    }
+
+    public EmployeeResponse getEmployeeByNama(String namaLengkapEmployee){
+
+        Employee employee = employeeRepository.findByNamaLengkapEmployee(namaLengkapEmployee)
+                    .orElseThrow(() -> new ResourceNotFound("Nama tersebut tidak ada!"));
+            
+        return employeeMapper.toResponse(employee);
+    }
+
+    public List<EmployeeResponse> getEmployeByTanggalBergabungSetelah(LocalDate tanggal){
+
+        return employeeRepository.findByTanggalBergabungEmployee(tanggal)
+                .stream()
+                .map(employeeMapper::toResponse)
+                .toList();
+    }
+
+    public List<EmployeeResponse> getEmployeeByTanggalBergabungBetweeen(LocalDate tanggal1, LocalDate tanggal2){
+
+        return employeeRepository.findByTanggalBergabungEmployeeBetween(tanggal1, tanggal2)
+                .stream()
+                .map(employeeMapper::toResponse)
+                .toList();
+    }
+
+    public List<EmployeeResponse> getEmployeeStatus(EmployeeStatus status){
+        
+        List<Employee> employees = employeeRepository.findByStatus(status);
+
+        return employees.stream()
+                .map(employeeMapper::toResponse)
+                .toList();
+    }
+
+    public void deleteEmployeeById(Long employeeId){
+        employeeRepository.deleteById(employeeId);
+    }
+
+    public UpdateEmployeeResponse updateProfileEmployee(Long employeeId, EmployeeRequest request){
+        
+        Employee employee = getEmployeeById(employeeId);
+
+        employee.setNik(request.getNik());
+        employee.setNamaLengkapEmployee(request.getNamaLengkapEmployee());
+        employee.setNomerHpEmployee(request.getNomerHpEmployee());
+        employee.setTanggalLahirEmployee(request.getTanggalLahirEmployee());
+
+        employeeRepository.save(employee);
+
+        return updateEmployeeMapper.mapToResponse(employee);
     }
 }

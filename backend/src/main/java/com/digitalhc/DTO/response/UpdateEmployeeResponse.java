@@ -11,13 +11,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeResponse {
+public class UpdateEmployeeResponse {
     
     private Long nik;
     private String namaLengkapEmployee;
     private Long nomerHpEmployee;
     private LocalDate tanggalLahirEmployee;
-    private LocalDate tanggalBergabungEmployee;
-    private LocalDate createAt;
-    private LocalDate updateAt;
 }

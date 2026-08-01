@@ -1,5 +1,7 @@
 package com.digitalhc.DTO.request;
 
+import java.time.LocalDate;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -19,14 +21,14 @@ public class EmployeeRequest {
     private Long nomerHpEmployee;
 
     @NotBlank(message = "Tanggal lahir wajib di isi!")
-    private String tanggalLahirEmployee;
+    private LocalDate tanggalLahirEmployee;
 
     @NotBlank(message = "Tanggal bergabung wajib di isi!")
-    private String tanggalBergabungEmployee;
+    private LocalDate tanggalBergabungEmployee;
 
     @NotBlank(message = "Wajib di isi!")
-    private String createAt;
+    private LocalDate createAt;
     
     @NotBlank(message = "Wajib di isi!")
-    private String updateAt;
+    private LocalDate updateAt;
 }

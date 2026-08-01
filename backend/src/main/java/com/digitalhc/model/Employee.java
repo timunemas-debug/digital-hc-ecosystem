@@ -1,5 +1,6 @@
 package com.digitalhc.model;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -32,23 +33,20 @@ public class Employee {
     private Long nik;
     private String namaLengkapEmployee;
     private Long nomerHpEmployee;
-    private String tanggalLahirEmployee;
-    private String tanggalBergabungEmployee;
+    private LocalDate tanggalLahirEmployee;
+    private LocalDate tanggalBergabungEmployee;
 
     @Enumerated(EnumType.STRING)
     private EmployeeStatus status;
 
-    private String createAt;
-    private String updateAt;
+    private LocalDate createAt;
+    private LocalDate updateAt;
 
     @OneToMany(mappedBy = "employee")
     private List<Leave> leaveList;
 
-    @OneToMany(mappedBy = "employee")
-    private List<Leave> approvedLeaves;
-
     @OneToOne(mappedBy = "employee")
-    private List<LeaveBalance> leaveBalancesList;
+    private LeaveBalance leaveBalancesList;
 
     @OneToMany(mappedBy = "employee")
     private List<Attendance> attendancesList;
