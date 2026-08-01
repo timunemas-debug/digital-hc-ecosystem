@@ -59,7 +59,7 @@ public class EmployeeService {
         return employeeMapper.toResponse(employee);
     }
 
-    public List<EmployeeResponse> getEmployeByTanggalBergabungSetelah(LocalDate tanggal){
+    public List<EmployeeResponse> getEmployeeByTanggalBergabungSetelah(LocalDate tanggal){
 
         return employeeRepository.findByTanggalBergabungEmployee(tanggal)
                 .stream()
@@ -85,6 +85,10 @@ public class EmployeeService {
     }
 
     public void deleteEmployeeById(Long employeeId){
+        
+        if(!employeeRepository.existsById(employeeId)){
+            throw new ResourceNotFound("Employee tidak ditemukan!");
+        }
         employeeRepository.deleteById(employeeId);
     }
 
