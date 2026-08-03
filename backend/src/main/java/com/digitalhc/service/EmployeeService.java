@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.digitalhc.DTO.request.EmployeeRequest;
+import com.digitalhc.DTO.request.UpdateEmployeeRequest;
 import com.digitalhc.DTO.response.EmployeeResponse;
 import com.digitalhc.DTO.response.UpdateEmployeeResponse;
 import com.digitalhc.exception.ResourceNotFound;
@@ -92,7 +93,7 @@ public class EmployeeService {
         employeeRepository.deleteById(employeeId);
     }
 
-    public UpdateEmployeeResponse updateProfileEmployee(Long employeeId, EmployeeRequest request){
+    public UpdateEmployeeResponse updateProfileEmployee(Long employeeId, UpdateEmployeeRequest request){
         
         Employee employee = getEmployeeById(employeeId);
 

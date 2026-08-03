@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.digitalhc.DTO.request.EmployeeRequest;
+import com.digitalhc.DTO.request.UpdateEmployeeRequest;
 import com.digitalhc.DTO.response.EmployeeResponse;
 import com.digitalhc.DTO.response.UpdateEmployeeResponse;
 import com.digitalhc.exception.ResourceNotFound;
@@ -294,7 +295,7 @@ public class EmployeeServiceTest {
         employee.setNik(1L);
         employee.setNamaLengkapEmployee("Jeremy");
 
-        EmployeeRequest request = new EmployeeRequest();
+        UpdateEmployeeRequest request = new UpdateEmployeeRequest();
         request.setNik(2L);
         request.setNamaLengkapEmployee("Pretty");
 

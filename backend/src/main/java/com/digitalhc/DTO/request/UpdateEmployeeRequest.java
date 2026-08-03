@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateEmployeRequest {
+public class UpdateEmployeeRequest {
     
     @NotBlank(message = "Nama tidak boleh kosong!")
     private String namaLengkapEmployee;

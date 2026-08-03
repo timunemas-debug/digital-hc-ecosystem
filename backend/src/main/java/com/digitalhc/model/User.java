@@ -33,5 +33,5 @@ public class User {
     @JoinColumn(name = "employee_id", unique = true)
     private Employee employee;
 
-    private EmployeeStatus status;
+    private UserStatus status;
 }

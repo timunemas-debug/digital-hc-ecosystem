@@ -1,6 +1,5 @@
 package com.digitalhc.DTO.response;
 
-
 import com.digitalhc.model.Role;
 import com.digitalhc.model.UserStatus;
 
@@ -13,8 +12,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
-
+public class UpdateUserResponse {
+    
     private String email;
     private Role role;
     private UserStatus status;
