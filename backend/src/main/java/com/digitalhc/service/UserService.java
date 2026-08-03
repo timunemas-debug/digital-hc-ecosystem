@@ -8,6 +8,7 @@ import com.digitalhc.DTO.request.UpdateUserRequest;
 import com.digitalhc.DTO.request.UserRequest;
 import com.digitalhc.DTO.response.UpdateUserResponse;
 import com.digitalhc.DTO.response.UserResponse;
+import com.digitalhc.exception.BadRequestException;
 import com.digitalhc.exception.ResourceNotFound;
 import com.digitalhc.mapper.UpdateUserMapper;
 import com.digitalhc.mapper.UserMapper;
@@ -34,6 +35,10 @@ public class UserService {
     public UserResponse addUser(UserRequest request){
         
         Employee employee = employeeService.getEmployeeById(request.getEmployeeId());
+
+        if(userRepository.existsByEmployee(employee)){
+            throw new BadRequestException("Employee sudah memiliki akun!");
+        }
 
         User user = userMapper.toEntity(request);
 
