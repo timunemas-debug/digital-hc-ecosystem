@@ -12,7 +12,6 @@ public class UserMapper {
     public User toEntity(UserRequest request){
 
         User user = new User();
-        user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
         user.setRole(request.getRole());
 
@@ -20,7 +19,10 @@ public class UserMapper {
     }
 
     public UserResponse toResponse(User user){
-        return new UserResponse(user.getEmail(),
+
+        return new UserResponse(user.getUserId(),
+                                user.getEmployee().getEmployeeId(),
+                                user.getEmployee().getEmail(),
                                 user.getRole(),
                                 user.getStatus());
     }

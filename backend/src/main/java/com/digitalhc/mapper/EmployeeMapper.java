@@ -13,6 +13,7 @@ public class EmployeeMapper {
 
         Employee employee = new Employee();
 
+        employee.setEmail(request.getEmail());
         employee.setNik(request.getNik());
         employee.setNamaLengkapEmployee(request.getNamaLengkapEmployee());
         employee.setNomerHpEmployee(request.getNomerHpEmployee());
@@ -25,7 +26,8 @@ public class EmployeeMapper {
     }
 
     public EmployeeResponse toResponse(Employee employee){
-        return new EmployeeResponse(employee.getNik(),
+        return new EmployeeResponse(employee.getEmail(),
+                                    employee.getNik(),
                                     employee.getNamaLengkapEmployee(),
                                     employee.getNomerHpEmployee(),
                                     employee.getTanggalLahirEmployee(),

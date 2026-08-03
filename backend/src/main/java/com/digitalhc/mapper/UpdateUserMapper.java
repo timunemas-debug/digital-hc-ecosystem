@@ -11,7 +11,6 @@ public class UpdateUserMapper {
     public UpdateUserResponse toResponse(User user){
 
         UpdateUserResponse response = new UpdateUserResponse();
-        response.setEmail(user.getEmail());
         response.setRole(user.getRole());
         response.setStatus(user.getStatus());
 

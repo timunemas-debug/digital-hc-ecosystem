@@ -30,6 +30,7 @@ public class Employee {
     @OneToOne(mappedBy = "employee")
     private User user;
 
+    private String email;
     private Long nik;
     private String namaLengkapEmployee;
     private Long nomerHpEmployee;

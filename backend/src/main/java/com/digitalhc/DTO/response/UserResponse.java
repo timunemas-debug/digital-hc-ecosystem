@@ -15,6 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserResponse {
 
+    private Long userId;
+    private Long employeeId;
     private String email;
     private Role role;
     private UserStatus status;

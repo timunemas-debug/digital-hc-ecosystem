@@ -2,6 +2,7 @@ package com.digitalhc.DTO.request;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -11,6 +12,10 @@ import lombok.Setter;
 @Setter
 public class EmployeeRequest {
     
+    @NotBlank(message = "Email wajib di isi!")
+    @Email
+    private String email;
+
     @NotNull(message = "NIK wajib di isi!")
     private Long nik;
 

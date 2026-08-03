@@ -2,7 +2,6 @@ package com.digitalhc.DTO.request;
 
 import com.digitalhc.model.Role;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -12,9 +11,8 @@ import lombok.Setter;
 @Setter
 public class UserRequest {
 
-    @NotBlank(message = "Email wajib di isi!")
-    @Email
-    private String email;
+    @NotNull(message = "Employee wajib di pilih!")
+    private Long employeeId;
 
     @NotBlank(message = "Password wajib di isi!")
     private String password;

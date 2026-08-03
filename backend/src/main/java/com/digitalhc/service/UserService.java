@@ -8,10 +8,10 @@ import com.digitalhc.DTO.request.UpdateUserRequest;
 import com.digitalhc.DTO.request.UserRequest;
 import com.digitalhc.DTO.response.UpdateUserResponse;
 import com.digitalhc.DTO.response.UserResponse;
-import com.digitalhc.exception.BadRequestException;
 import com.digitalhc.exception.ResourceNotFound;
 import com.digitalhc.mapper.UpdateUserMapper;
 import com.digitalhc.mapper.UserMapper;
+import com.digitalhc.model.Employee;
 import com.digitalhc.model.User;
 import com.digitalhc.model.UserStatus;
 import com.digitalhc.repository.UserRepository;
@@ -22,19 +22,22 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final UpdateUserMapper updateUserMapper;
+    private final EmployeeService employeeService;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, UpdateUserMapper updateUserMapper){
+    public UserService(UserRepository userRepository, UserMapper userMapper, UpdateUserMapper updateUserMapper, EmployeeService employeeService){
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.updateUserMapper = updateUserMapper;
+        this.employeeService =employeeService;
     }
 
     public UserResponse addUser(UserRequest request){
-        if(userRepository.existsByEmail(request.getEmail())){
-            throw new BadRequestException("Email sudah terdaftar");
-        }
+        
+        Employee employee = employeeService.getEmployeeById(request.getEmployeeId());
 
         User user = userMapper.toEntity(request);
+
+        user.setEmployee(employee);
         user.setStatus(UserStatus.AKTIF);
 
         return userMapper.toResponse(userRepository.save(user));
@@ -65,11 +68,6 @@ public class UserService {
 
         User user = getUserById(userId);
 
-        if(!user.getEmail().equals(request.getEmail()) && userRepository.existsByEmail(request.getEmail())){
-            throw new BadRequestException("Email sudah terdaftar");
-        }
-
-        user.setEmail(request.getEmail());
         user.setRole(request.getRole());
         user.setStatus(request.getStatus());
 
