@@ -19,6 +19,5 @@ public class EmployeeResponse {
     private Long nomerHpEmployee;
     private LocalDate tanggalLahirEmployee;
     private LocalDate tanggalBergabungEmployee;
-    private LocalDate createAt;
-    private LocalDate updateAt;
+    private String positionName;
 }

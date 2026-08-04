@@ -1,6 +1,6 @@
 package com.digitalhc.DTO.request;
 
-import com.digitalhc.model.DepartementName;
+import com.digitalhc.model.DepartmentName;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.Setter;
 public class DepartmentRequest {
     
     @NotNull(message = "Department wajib di isi!")
-    private DepartementName departementName;
+    private DepartmentName departementName;
 
-    private String deskription;
+    private String description;
 }

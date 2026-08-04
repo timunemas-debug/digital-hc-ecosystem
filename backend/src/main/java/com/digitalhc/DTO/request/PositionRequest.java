@@ -16,4 +16,7 @@ public class PositionRequest {
 
     @NotNull(message = "Job level wajib di isi!")
     private JobLevel jobLevel;
+
+    @NotNull(message = "Deparment wajib di isi!")
+    private Long departmentId;
 }

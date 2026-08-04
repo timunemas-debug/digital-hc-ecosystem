@@ -1,6 +1,6 @@
 package com.digitalhc.model;
 
-public enum DepartementName {
+public enum DepartmentName {
     EMPLOYEE,
     MANAGER,
     HUMANCAPITAL,

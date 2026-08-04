@@ -23,9 +23,9 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long departmentId;
 
-    private DepartementName departmentName;
+    private DepartmentName departmentName;
 
-    private String deskription;
+    private String description;
 
     @OneToMany(mappedBy = "department")
     private List<Position> positions;

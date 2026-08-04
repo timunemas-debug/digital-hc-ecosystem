@@ -57,8 +57,6 @@ public class EmployeeServiceTest {
         request.setNomerHpEmployee(012345L);
         request.setTanggalLahirEmployee(LocalDate.of(2004, 1, 18));
         request.setTanggalBergabungEmployee(LocalDate.of(2026,8,1));
-        request.setCreateAt(LocalDate.of(2026,8,1));
-        request.setUpdateAt(LocalDate.of(2027, 8, 1));
 
         EmployeeResponse response = new EmployeeResponse();
         response.setNik(1L);
@@ -66,8 +64,6 @@ public class EmployeeServiceTest {
         response.setNomerHpEmployee(012345L);
         response.setTanggalLahirEmployee(LocalDate.of(2004, 1, 18));
         response.setTanggalBergabungEmployee(LocalDate.of(2026,8,1));
-        response.setCreateAt(LocalDate.of(2026,8,1));
-        response.setUpdateAt(LocalDate.of(2027, 8, 1));
 
         when(employeeRepository.existsByNamaLengkapEmployee("Jeremy"))
                 .thenReturn(false);
@@ -134,8 +130,6 @@ public class EmployeeServiceTest {
         response.setNomerHpEmployee(012345L);
         response.setTanggalLahirEmployee(LocalDate.of(2004, 1, 18));
         response.setTanggalBergabungEmployee(LocalDate.of(2026,8,1));
-        response.setCreateAt(LocalDate.of(2026,8,1));
-        response.setUpdateAt(LocalDate.of(2027, 8, 1));
 
         when(employeeRepository.findById(2L))
                 .thenReturn(Optional.of(employee));

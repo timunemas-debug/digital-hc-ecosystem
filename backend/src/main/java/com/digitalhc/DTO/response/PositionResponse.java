@@ -1,5 +1,6 @@
 package com.digitalhc.DTO.response;
 
+import com.digitalhc.model.DepartmentName;
 import com.digitalhc.model.JobLevel;
 
 import lombok.AllArgsConstructor;
@@ -15,4 +16,5 @@ public class PositionResponse {
     
     private String positionName;
     private JobLevel jobLevel;
+    private DepartmentName departmentName;
 }

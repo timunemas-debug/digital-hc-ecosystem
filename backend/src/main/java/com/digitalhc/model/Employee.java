@@ -9,6 +9,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -42,6 +44,10 @@ public class Employee {
 
     private LocalDate createAt;
     private LocalDate updateAt;
+
+    @ManyToOne
+    @JoinColumn(name = "position_id")
+    private Position position;
 
     @OneToMany(mappedBy = "employee")
     private List<Leave> leaveList;

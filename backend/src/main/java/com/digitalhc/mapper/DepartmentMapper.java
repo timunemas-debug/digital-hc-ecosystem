@@ -13,13 +13,13 @@ public class DepartmentMapper {
 
         Department department = new Department();
         department.setDepartmentName(request.getDepartementName());
-        department.setDeskription(request.getDeskription());
+        department.setDescription(request.getDescription());
         
         return department;
     }
 
     public DepartmentResponse toResponse(Department department){
         return new DepartmentResponse(department.getDepartmentName(),
-                                      department.getDeskription());
+                                      department.getDescription());
     }
 }

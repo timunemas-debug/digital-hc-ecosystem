@@ -19,8 +19,6 @@ public class EmployeeMapper {
         employee.setNomerHpEmployee(request.getNomerHpEmployee());
         employee.setTanggalLahirEmployee(request.getTanggalLahirEmployee());
         employee.setTanggalBergabungEmployee(request.getTanggalBergabungEmployee());
-        employee.setCreateAt(request.getCreateAt());
-        employee.setUpdateAt(request.getUpdateAt());
 
         return employee;
     }
@@ -32,7 +30,7 @@ public class EmployeeMapper {
                                     employee.getNomerHpEmployee(),
                                     employee.getTanggalLahirEmployee(),
                                     employee.getTanggalBergabungEmployee(),
-                                    employee.getCreateAt(),
-                                    employee.getUpdateAt());
+                                    employee.getPosition().getPositionName()
+                                    );
     }
 }

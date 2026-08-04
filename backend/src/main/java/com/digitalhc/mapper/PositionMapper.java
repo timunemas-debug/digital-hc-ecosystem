@@ -20,6 +20,8 @@ public class PositionMapper {
 
     public PositionResponse toResponse(Position position){
         return new PositionResponse(position.getPositionName(),
-                                    position.getJobLevel());
+                                    position.getJobLevel(),
+                                    position.getDepartment().getDepartmentName()
+                                    );
     }
 }

@@ -1,6 +1,6 @@
 package com.digitalhc.DTO.response;
 
-import com.digitalhc.model.DepartementName;
+import com.digitalhc.model.DepartmentName;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DepartmentResponse {
     
-    private DepartementName departementName;
-    private String deskription;
+    private DepartmentName departementName;
+    private String description;
 }

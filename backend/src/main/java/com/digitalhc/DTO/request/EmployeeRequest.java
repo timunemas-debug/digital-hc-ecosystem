@@ -25,15 +25,12 @@ public class EmployeeRequest {
     @NotNull(message = "Nomer handphone wajib di isi!")
     private Long nomerHpEmployee;
 
-    @NotBlank(message = "Tanggal lahir wajib di isi!")
+    @NotNull(message = "Tanggal lahir wajib di isi!")
     private LocalDate tanggalLahirEmployee;
 
-    @NotBlank(message = "Tanggal bergabung wajib di isi!")
+    @NotNull(message = "Tanggal bergabung wajib di isi!")
     private LocalDate tanggalBergabungEmployee;
 
-    @NotBlank(message = "Wajib di isi!")
-    private LocalDate createAt;
-    
-    @NotBlank(message = "Wajib di isi!")
-    private LocalDate updateAt;
+    @NotNull(message = "Position wajib di isi!")
+    private Long positionId;
 }
