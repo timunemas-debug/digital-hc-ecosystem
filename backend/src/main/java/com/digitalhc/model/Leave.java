@@ -1,5 +1,7 @@
 package com.digitalhc.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,8 +28,8 @@ public class Leave {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    private String startDateLeave;
-    private String endDataLeave;
+    private LocalDate startDateLeave;
+    private LocalDate endDataLeave;
     private String reasonLeave;
     private LeaveStatus status;
 
