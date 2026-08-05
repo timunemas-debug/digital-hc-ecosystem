@@ -155,6 +155,10 @@ public class LeaveServiceTest {
     @Test
     public void shouldUpdateLeave(){
 
+        Employee employee = new Employee();
+        employee.setEmployeeId(1L);
+        employee.setNamaLengkapEmployee("jeremy");
+
         Leave leave = new Leave();
         leave.setLeaveId(1L);
         leave.setReasonLeave("Test");
@@ -173,7 +177,7 @@ public class LeaveServiceTest {
         when(leaveRepository.save(leave))
                 .thenReturn(leave);
 
-        LeaveResponse result = leaveService.updateLeave(1L, LeaveStatus.APPROVED);
+        LeaveResponse result = leaveService.updateLeave(1L, LeaveStatus.APPROVED, employee);
 
         assertEquals("Test", result.getReasonLeave());
         assertEquals(LeaveStatus.APPROVED, result.getStatus());

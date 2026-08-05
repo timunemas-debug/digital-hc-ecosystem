@@ -60,14 +60,19 @@ public class LeaveService {
                 .toList();
     }
 
-    public LeaveResponse updateLeave(Long leaveId, LeaveStatus status){
+    public LeaveResponse updateLeave(Long leaveId, LeaveStatus status, Employee employee){
 
         Leave leave = getLeaveByLeaveId(leaveId);
 
-        if (leave.getStatus() != status.SUBMITTED) {
+        if (leave.getStatus() != LeaveStatus.SUBMITTED) {
             throw new BadRequestException("Status leave sudah diproses dan tidak dapat diubah!");
         }
 
+        if (leave.getApprovedBy() != null){
+            throw new BadRequestException("Approved by sudah terisi");
+        }
+        
+        leave.setApprovedBy(employee);
         leave.setStatus(status);
 
         return leaveMapper.toResponse(leaveRepository.save(leave));
