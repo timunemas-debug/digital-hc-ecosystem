@@ -2,6 +2,7 @@ package com.digitalhc.DTO.request;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -10,6 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateEmployeeRequest {
+
+    @NotBlank(message = "Email wajib di isi!")
+    @Email
+    private String email;
     
     @NotBlank(message = "Nama tidak boleh kosong!")
     private String namaLengkapEmployee;

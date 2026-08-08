@@ -13,6 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UpdateEmployeeResponse {
     
+    private String email;
     private Long nik;
     private String namaLengkapEmployee;
     private Long nomerHpEmployee;

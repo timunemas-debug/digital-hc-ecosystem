@@ -11,6 +11,7 @@ public class UpdateEmployeeMapper {
     public UpdateEmployeeResponse mapToResponse(Employee employee){
 
         UpdateEmployeeResponse response = new UpdateEmployeeResponse();
+        response.setEmail(employee.getEmail());
         response.setNik(employee.getNik());
         response.setNamaLengkapEmployee(employee.getNamaLengkapEmployee());
         response.setNomerHpEmployee(employee.getNomerHpEmployee());
