@@ -26,6 +26,6 @@ public class LeaveBalance {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    private int totalLeaves;
+    private int totalLeaves = 12;
     private int usedLeaves;
 }

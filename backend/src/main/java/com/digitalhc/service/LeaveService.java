@@ -1,5 +1,6 @@
 package com.digitalhc.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -27,10 +28,19 @@ public class LeaveService {
 
     public LeaveResponse addLeave(Employee employee, LeaveRequest request){
 
+        LocalDate tanggalBergabung = employee.getTanggalBergabungEmployee();
         long pendingLeave = leaveRepository.countByEmployeeAndStatus(employee, LeaveStatus.SUBMITTED);
+
+        if (tanggalBergabung == null) {
+            throw new BadRequestException("Tanggal bergabung belum tersedia!");
+        }
 
         if(pendingLeave >= 2){
             throw new BadRequestException("Sedang menunggu persetujuan...");
+        }
+
+        if (LocalDate.now().isBefore(tanggalBergabung.plusYears(1))) {
+            throw new BadRequestException("Karyawan belum 1 tahun bekerja!");
         }
 
         Leave leave = leaveMapper.toEntity(request);
