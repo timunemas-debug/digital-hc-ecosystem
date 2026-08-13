@@ -1,12 +1,20 @@
 package com.digitalhc.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.digitalhc.DTO.request.AttendanceRequest;
 import com.digitalhc.DTO.response.AttendanceResponse;
+import com.digitalhc.exception.BadRequestException;
 import com.digitalhc.exception.ResourceNotFound;
 import com.digitalhc.mapper.AttendanceMapper;
 import com.digitalhc.model.Attendance;
+import com.digitalhc.model.AttendanceStatus;
 import com.digitalhc.model.Employee;
 import com.digitalhc.repository.AttendanceRepository;
 import com.digitalhc.repository.EmployeeRepository;
@@ -30,13 +38,92 @@ public class AttendanceService {
                 .orElseThrow(() -> new ResourceNotFound("Employee tidak ditemukan!"));
     }
 
-    public AttendanceResponse addAttendance(AttendanceRequest request){
+    private Attendance getAttendanceById(Long attendanceId){
+        return attendanceRepository.findById(attendanceId)
+                .orElseThrow(() -> new ResourceNotFound("Attendance tidak ditemukan!"));
+    }
 
+    public AttendanceResponse checkIn(AttendanceRequest request){
+        
         Employee employee = getEmployeeById(request.getEmployeeId());
+        
+        LocalDate today = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
+
+        if (attendanceRepository.findByEmployeeEmployeeIdAndAttendanceDate(employee.getEmployeeId(), today).isPresent()) {
+            throw new BadRequestException("Employee sudah melakukan check in hari ini");
+        }
 
         Attendance attendance = attendanceMapper.toEntity(request);
         attendance.setEmployee(employee);
+        attendance.setAttendanceDate(today);
+        attendance.setCheckIn(now);
+        
+        LocalTime batasMasuk = LocalTime.of(9, 15);
+        
+        if (now.toLocalTime().isAfter(batasMasuk)) {
+            attendance.setAttendanceStatus(AttendanceStatus.TELAT);
+        } else{
+            attendance.setAttendanceStatus(AttendanceStatus.HADIR);
+        }
 
         return attendanceMapper.toResponse(attendanceRepository.save(attendance));
+    }
+
+    public void checkOut(Long employeeId){
+
+        LocalDate today = LocalDate.now();
+
+        Attendance attendance = attendanceRepository.findByEmployeeEmployeeIdAndAttendanceDate(employeeId, today)
+                .orElseThrow(() -> new ResourceNotFound("Employee belum melakukan check in hari ini!"));
+
+        if (attendance.getCheckOut() != null) {
+            throw new BadRequestException("Employee sudah melakukan check out");
+        }
+
+        attendance.setCheckOut(LocalDateTime.now());
+
+        attendanceRepository.save(attendance);
+    }
+
+    public AttendanceResponse getAttendanceResponseById(Long attendanceId){
+
+        Attendance attendance = getAttendanceById(attendanceId);
+
+        return attendanceMapper.toResponse(attendance);
+    }
+
+    public List<AttendanceResponse> getAllAttendance(){
+
+        return attendanceRepository.findAll()
+                .stream()
+                .map(attendanceMapper::toResponse)
+                .toList();
+    }
+
+    public List<AttendanceResponse> getAttendanceByEmployee(Long employeeId){
+
+        getEmployeeById(employeeId);
+
+        return attendanceRepository.findByEmployeeEmployeeId(employeeId)
+                .stream()
+                .map(attendanceMapper::toResponse)
+                .toList();
+    }
+
+    public List<AttendanceResponse> getAttendanceByDate(LocalDate date){
+
+        return attendanceRepository.findByAttendanceDate(date)
+                .stream()
+                .map(attendanceMapper::toResponse)
+                .toList();
+    }
+
+    public AttendanceResponse getAttendanceByEmployeeAndDate(Long employeeId, LocalDate date){
+
+        Attendance attendance = attendanceRepository.findByEmployeeEmployeeIdAndAttendanceDate(employeeId, date)
+                    .orElseThrow(() -> new ResourceNotFound("Attendance tidak ditemukan"));
+
+        return attendanceMapper.toResponse(attendance);
     }
 }

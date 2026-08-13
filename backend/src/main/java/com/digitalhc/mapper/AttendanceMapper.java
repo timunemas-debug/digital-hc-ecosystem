@@ -12,11 +12,6 @@ public class AttendanceMapper {
     public Attendance toEntity(AttendanceRequest request){
 
         Attendance attendance = new Attendance();
-        attendance.setAttendanceDate(request.getAttendanceDate());
-        attendance.setCheckIn(request.getCheckIn());
-        attendance.setCheckOut(request.getCheckOut());
-        attendance.setLateMinutes(request.getLateMinutes());
-
         return attendance;
     }
 
