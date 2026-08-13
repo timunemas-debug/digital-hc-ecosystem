@@ -1,5 +1,8 @@
 package com.digitalhc.DTO.response;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AttendanceResponse {
     
-    private String attendanceDate;
-    private double checkIn;
-    private double checkOut;
-    private double lateMinutes;
+    private LocalDate attendanceDate;
+    private LocalDateTime checkIn;
+    private LocalDateTime checkOut;
+    private LocalDateTime lateMinutes;
 }

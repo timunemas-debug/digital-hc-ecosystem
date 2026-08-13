@@ -1,6 +1,8 @@
 package com.digitalhc.DTO.request;
 
-import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,15 +11,18 @@ import lombok.Setter;
 @Setter
 public class AttendanceRequest {
     
-    @NotBlank(message = "Tanggal wajib di isi!")
-    private String attendanceDate;
+    @NotNull(message = "Employee id wajib di isi!")
+    private Long employeeId;
+
+    @NotNull(message = "Tanggal wajib di isi!")
+    private LocalDate attendanceDate;
 
     @NotNull(message = "Check in wajib di isi!")
-    private double checkIn;
+    private LocalDateTime checkIn;
 
     @NotNull(message = "Check out wajib di isi!")
-    private double checkOut;
+    private LocalDateTime checkOut;
 
     @NotNull(message = "Late minutes wajib di isi!")
-    private double lateMinutes;
+    private LocalDateTime lateMinutes;
 }

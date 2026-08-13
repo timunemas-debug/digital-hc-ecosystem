@@ -1,5 +1,8 @@
 package com.digitalhc.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -28,10 +31,10 @@ public class Attendance {
     @JoinColumn(name = "employee_id")
     private Employee employee;
     
-    private String attendanceDate;
-    private double checkIn;
-    private double checkOut;
-    private double lateMinutes;
+    private LocalDate attendanceDate;
+    private LocalDateTime checkIn;
+    private LocalDateTime checkOut;
+    private LocalDateTime lateMinutes;
 
     @Enumerated(EnumType.STRING)
     private AttendanceStatus attendanceStatus;
