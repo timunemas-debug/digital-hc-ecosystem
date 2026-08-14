@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PositionRequest {
-    
+
     @NotBlank(message = "Position wajib di isi!")
     private String positionName;
 

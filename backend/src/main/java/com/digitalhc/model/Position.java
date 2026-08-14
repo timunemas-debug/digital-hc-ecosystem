@@ -26,7 +26,6 @@ public class Position {
     private Long positionId;
 
     private String positionName;
-
     private JobLevel jobLevel;
 
     @ManyToOne
@@ -34,6 +33,6 @@ public class Position {
     private Department department;
 
     @OneToMany(mappedBy = "position")
-    private List<Employee> employee;
+    private List<Employee> employees;
 
 }

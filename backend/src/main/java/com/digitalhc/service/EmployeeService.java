@@ -6,14 +6,17 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.digitalhc.DTO.request.EmployeeRequest;
+import com.digitalhc.DTO.request.PositionRequest;
 import com.digitalhc.DTO.request.UpdateEmployeeRequest;
 import com.digitalhc.DTO.response.EmployeeResponse;
 import com.digitalhc.DTO.response.UpdateEmployeeResponse;
+import com.digitalhc.exception.BadRequestException;
 import com.digitalhc.exception.ResourceNotFound;
 import com.digitalhc.mapper.EmployeeMapper;
 import com.digitalhc.mapper.UpdateEmployeeMapper;
 import com.digitalhc.model.Employee;
 import com.digitalhc.model.EmployeeStatus;
+import com.digitalhc.model.Position;
 import com.digitalhc.repository.EmployeeRepository;
 
 @Service
@@ -22,11 +25,13 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
     private final UpdateEmployeeMapper updateEmployeeMapper;
+    private final PositionService positionService;
 
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, UpdateEmployeeMapper updateEmployeeMapper){
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, UpdateEmployeeMapper updateEmployeeMapper, PositionService positionService){
         this.employeeRepository = employeeRepository;
         this.employeeMapper = employeeMapper;
         this.updateEmployeeMapper = updateEmployeeMapper;
+        this.positionService = positionService;
     }
 
     public EmployeeResponse addEmployee(EmployeeRequest request){
@@ -105,5 +110,31 @@ public class EmployeeService {
         employeeRepository.save(employee);
 
         return updateEmployeeMapper.mapToResponse(employee);
+    }
+
+    public EmployeeResponse assignPosition(Long employeeId, Long positionId){
+
+        Employee employee = getEmployeeById(employeeId);
+
+        if (employee.getPosition() != null) {
+            throw new BadRequestException("Position sudah ditambahkan!");
+        }
+
+        Position position = positionService.getPositionById(positionId);
+
+        employee.setPosition(position);
+
+        return employeeMapper.toResponse(employeeRepository.save(employee));
+    }
+
+    public EmployeeResponse changePosition(Long employeeId, Long positionId){
+
+        Employee employee = getEmployeeById(employeeId);
+
+        Position position = positionService.getPositionById(positionId);
+
+        employee.setPosition(position);
+
+        return employeeMapper.toResponse(employeeRepository.save(employee));
     }
 }

@@ -17,6 +17,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>{
 
     List<Employee> findByTanggalBergabungEmployee(LocalDate tanggal);
     List<Employee> findByTanggalBergabungEmployeeBetween(LocalDate start, LocalDate end);
-
+    List<Employee> findByEmployeeId(Long employeeId);
     List<Employee> findByStatus(EmployeeStatus status);
 }
