@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.digitalhc.DTO.request.EmployeeRequest;
-import com.digitalhc.DTO.request.PositionRequest;
 import com.digitalhc.DTO.request.UpdateEmployeeRequest;
 import com.digitalhc.DTO.response.EmployeeResponse;
 import com.digitalhc.DTO.response.UpdateEmployeeResponse;

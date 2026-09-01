@@ -19,6 +19,7 @@ import com.digitalhc.mapper.LeaveMapper;
 import com.digitalhc.model.Employee;
 import com.digitalhc.model.Leave;
 import com.digitalhc.model.LeaveStatus;
+import com.digitalhc.repository.EmployeeRepository;
 import com.digitalhc.repository.LeaveRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +31,9 @@ public class LeaveServiceTest {
     @Mock
     LeaveMapper leaveMapper;
 
+    @Mock
+    EmployeeRepository employeeRepository;
+
     @InjectMocks
     LeaveService leaveService;
 
@@ -39,6 +43,7 @@ public class LeaveServiceTest {
         Employee employee = new Employee();
         employee.setEmployeeId(1L);
         employee.setNamaLengkapEmployee("Jeremy");
+        employee.setTanggalBergabungEmployee(LocalDate.of(2, 4, 12));
 
         Leave leave = new Leave();
         leave.setReasonLeave("Test");
@@ -54,6 +59,9 @@ public class LeaveServiceTest {
         response.setStartDateLeave(LocalDate.of(2026, 7, 5));
         response.setStatus(LeaveStatus.SUBMITTED);
 
+        when(employeeRepository.findByEmployeeIdWithLock(1L))
+                .thenReturn(Optional.of(employee));
+
         when(leaveRepository.countByEmployeeAndStatus(employee, LeaveStatus.SUBMITTED))
                 .thenReturn(1L);
 
@@ -66,7 +74,7 @@ public class LeaveServiceTest {
         when(leaveRepository.save(leave))
                 .thenReturn(leave);
 
-        LeaveResponse result = leaveService.addLeave(employee, request);
+        LeaveResponse result = leaveService.addLeave(1L, request);
 
         assertEquals("Test", result.getReasonLeave());
         assertEquals(LocalDate.of(2026, 7, 5), result.getStartDateLeave());

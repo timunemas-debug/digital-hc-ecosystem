@@ -3,8 +3,10 @@ package com.digitalhc.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.digitalhc.DTO.request.AttendanceRequest;
@@ -18,12 +20,15 @@ import com.digitalhc.model.Employee;
 import com.digitalhc.repository.AttendanceRepository;
 import com.digitalhc.repository.EmployeeRepository;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class AttendanceService {
        
     private final AttendanceRepository attendanceRepository;
     private final AttendanceMapper attendanceMapper;
     private final EmployeeRepository employeeRepository;
+    private static final ZoneId ZONE_JAKARTA = ZoneId.of("Asia/Jakarta");
 
     public AttendanceService(AttendanceRepository attendanceRepository, AttendanceMapper attendanceMapper, EmployeeRepository employeeRepository){
         this.attendanceRepository = attendanceRepository;
@@ -42,12 +47,12 @@ public class AttendanceService {
                 .orElseThrow(() -> new ResourceNotFound("Attendance tidak ditemukan!"));
     }
 
+    @Transactional
     public AttendanceResponse checkIn(AttendanceRequest request){
         
         Employee employee = getEmployeeById(request.getEmployeeId());
-        
-        LocalDate today = LocalDate.now();
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate today = LocalDate.now(ZONE_JAKARTA);
+        LocalDateTime now = LocalDateTime.now(ZONE_JAKARTA);
 
         if (attendanceRepository.findByEmployeeEmployeeIdAndAttendanceDate(employee.getEmployeeId(), today).isPresent()) {
             throw new BadRequestException("Employee sudah melakukan check in hari ini");
@@ -57,21 +62,23 @@ public class AttendanceService {
         attendance.setEmployee(employee);
         attendance.setAttendanceDate(today);
         attendance.setCheckIn(now);
+        attendance.setAttendanceStatus(
+            now.toLocalTime().isAfter(LocalTime.of(9, 15)) ? AttendanceStatus.TELAT : AttendanceStatus.HADIR
+        );
         
-        LocalTime batasMasuk = LocalTime.of(9, 15);
-        
-        if (now.toLocalTime().isAfter(batasMasuk)) {
-            attendance.setAttendanceStatus(AttendanceStatus.TELAT);
-        } else{
-            attendance.setAttendanceStatus(AttendanceStatus.HADIR);
+        try {
+            return attendanceMapper.toResponse(attendanceRepository.save(attendance));
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("Employee sudah melakukan check in hari ini!");
         }
-
-        return attendanceMapper.toResponse(attendanceRepository.save(attendance));
     }
 
+    @Transactional
     public void checkOut(Long employeeId){
 
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(ZONE_JAKARTA);
+
+        getEmployeeById(employeeId);
 
         Attendance attendance = attendanceRepository.findByEmployeeEmployeeIdAndAttendanceDate(employeeId, today)
                 .orElseThrow(() -> new ResourceNotFound("Employee belum melakukan check in hari ini!"));
@@ -80,7 +87,7 @@ public class AttendanceService {
             throw new BadRequestException("Employee sudah melakukan check out");
         }
 
-        attendance.setCheckOut(LocalDateTime.now());
+        attendance.setCheckOut(LocalDateTime.now(ZONE_JAKARTA));
 
         attendanceRepository.save(attendance);
     }

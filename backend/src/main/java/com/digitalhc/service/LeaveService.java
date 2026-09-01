@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.digitalhc.DTO.request.LeaveRequest;
 import com.digitalhc.DTO.response.LeaveResponse;
@@ -13,6 +14,7 @@ import com.digitalhc.mapper.LeaveMapper;
 import com.digitalhc.model.Employee;
 import com.digitalhc.model.Leave;
 import com.digitalhc.model.LeaveStatus;
+import com.digitalhc.repository.EmployeeRepository;
 import com.digitalhc.repository.LeaveRepository;
 
 @Service
@@ -20,13 +22,19 @@ public class LeaveService {
 
     private final LeaveRepository leaveRepository;
     private final LeaveMapper leaveMapper;
+    private final EmployeeRepository employeeRepository;
 
-    public LeaveService(LeaveRepository leaveRepository, LeaveMapper leaveMapper){
+    public LeaveService(LeaveRepository leaveRepository, LeaveMapper leaveMapper, EmployeeRepository employeeRepository){
         this.leaveRepository = leaveRepository;
         this.leaveMapper = leaveMapper;
+        this.employeeRepository = employeeRepository;
     }
 
-    public LeaveResponse addLeave(Employee employee, LeaveRequest request){
+    @Transactional
+    public LeaveResponse addLeave(Long employeeId, LeaveRequest request){
+
+        Employee employee = employeeRepository.findByEmployeeIdWithLock(employeeId)
+                .orElseThrow(() -> new ResourceNotFound("Employee tidak ditemukan!"));
 
         LocalDate tanggalBergabung = employee.getTanggalBergabungEmployee();
         long pendingLeave = leaveRepository.countByEmployeeAndStatus(employee, LeaveStatus.SUBMITTED);
@@ -70,9 +78,11 @@ public class LeaveService {
                 .toList();
     }
 
+    @Transactional
     public LeaveResponse updateLeave(Long leaveId, LeaveStatus status, Employee employee){
 
-        Leave leave = getLeaveByLeaveId(leaveId);
+        Leave leave = leaveRepository.findByLeaveIdWithLock(leaveId)
+                .orElseThrow(() -> new ResourceNotFound("Leave tidak di temukan!"));
 
         if (leave.getStatus() != LeaveStatus.SUBMITTED) {
             throw new BadRequestException("Status leave sudah diproses dan tidak dapat diubah!");
