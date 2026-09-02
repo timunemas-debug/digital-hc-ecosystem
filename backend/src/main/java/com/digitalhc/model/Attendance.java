@@ -3,6 +3,7 @@ package com.digitalhc.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -37,9 +38,10 @@ public class Attendance {
     private Long attendanceId;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
     
+    @Column(name = "attendance_date", nullable = false)
     private LocalDate attendanceDate;
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
