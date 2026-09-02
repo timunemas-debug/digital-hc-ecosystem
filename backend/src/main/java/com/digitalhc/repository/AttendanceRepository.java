@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.digitalhc.model.Attendance;
+import com.digitalhc.model.AttendanceStatus;
 
 public interface AttendanceRepository extends JpaRepository<Attendance, Long>{
     
@@ -15,4 +16,6 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long>{
     List<Attendance> findByEmployeeEmployeeId(Long employeeId);
 
     List<Attendance> findByAttendanceDate(LocalDate date);
+
+    List<Attendance> findByAttandanceStatusAndAttendanceDate(AttendanceStatus status, LocalDate attendanceDate);
 }

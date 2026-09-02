@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -131,5 +132,18 @@ public class AttendanceService {
                     .orElseThrow(() -> new ResourceNotFound("Attendance tidak ditemukan"));
 
         return attendanceMapper.toResponse(attendance);
+    }
+    
+    public List<AttendanceResponse> getAttendanceByStatus(AttendanceStatus status, LocalDate date){
+
+        List<Attendance> attendance = attendanceRepository.findByAttandanceStatusAndAttendanceDate(status, date);
+        
+        if (attendance.isEmpty()) {
+            throw new ResourceNotFound("Tidak ada employee dengan status" + status);
+        }
+
+        return attendance.stream()
+                .map(attendanceMapper::toResponse)
+                .toList();
     }
 }

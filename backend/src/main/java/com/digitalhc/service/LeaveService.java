@@ -14,8 +14,11 @@ import com.digitalhc.mapper.LeaveMapper;
 import com.digitalhc.model.Employee;
 import com.digitalhc.model.Leave;
 import com.digitalhc.model.LeaveStatus;
+import com.digitalhc.model.Role;
 import com.digitalhc.repository.EmployeeRepository;
 import com.digitalhc.repository.LeaveRepository;
+
+import jakarta.annotation.Resource;
 
 @Service
 public class LeaveService {
@@ -35,13 +38,13 @@ public class LeaveService {
 
         Employee employee = employeeRepository.findByEmployeeIdWithLock(employeeId)
                 .orElseThrow(() -> new ResourceNotFound("Employee tidak ditemukan!"));
+                
+        if (employee.getTanggalBergabungEmployee() == null) {
+            throw new BadRequestException("Tanggal bergabung belum tersedia!");
+        }
 
         LocalDate tanggalBergabung = employee.getTanggalBergabungEmployee();
         long pendingLeave = leaveRepository.countByEmployeeAndStatus(employee, LeaveStatus.SUBMITTED);
-
-        if (tanggalBergabung == null) {
-            throw new BadRequestException("Tanggal bergabung belum tersedia!");
-        }
 
         if(pendingLeave >= 2){
             throw new BadRequestException("Sedang menunggu persetujuan...");
@@ -53,6 +56,7 @@ public class LeaveService {
 
         Leave leave = leaveMapper.toEntity(request);
         leave.setEmployee(employee);
+        leave.setStatus(LeaveStatus.SUBMITTED);
 
         return leaveMapper.toResponse(leaveRepository.save(leave));
     }
@@ -78,23 +82,35 @@ public class LeaveService {
                 .toList();
     }
 
+    public void viewRequestLeave(){
+
+    }
+
     @Transactional
-    public LeaveResponse updateLeave(Long leaveId, LeaveStatus status, Employee employee){
+    public void processLeave(Long leaveId, LeaveStatus status){
 
         Leave leave = leaveRepository.findByLeaveIdWithLock(leaveId)
-                .orElseThrow(() -> new ResourceNotFound("Leave tidak di temukan!"));
+                .orElseThrow(() -> new ResourceNotFound("Leave dengan id tersebut tidak ditemukan!"));
 
         if (leave.getStatus() != LeaveStatus.SUBMITTED) {
-            throw new BadRequestException("Status leave sudah diproses dan tidak dapat diubah!");
+            throw new BadRequestException("Status leave sudah di proses dan tidak dapat diubah!");
         }
 
-        if (leave.getApprovedBy() != null){
-            throw new BadRequestException("Approved by sudah terisi");
+        if (status != LeaveStatus.APPROVED && status != LeaveStatus.REJECTED) {
+            throw new BadRequestException("Status hanya dapat menjadi Apprved atau Rejected");
         }
-        
-        leave.setApprovedBy(employee);
+
+        if (leave.getApprovedBy() != null) {
+            throw new BadRequestException("Leave sudah di proses");
+        }
+
+        leave.setApprovedBy(Role.ROLE_HC_MANAGER);
         leave.setStatus(status);
 
-        return leaveMapper.toResponse(leaveRepository.save(leave));
+        leaveRepository.save(leave);
+    }
+
+    public void rejectLeave(){
+
     }
 }

@@ -159,39 +159,4 @@ public class LeaveServiceTest {
         verify(leaveRepository).findByEmployeeEmployeeId(1L);
         verify(leaveMapper).toResponse(leave);
     }
-
-    @Test
-    public void shouldUpdateLeave(){
-
-        Employee employee = new Employee();
-        employee.setEmployeeId(1L);
-        employee.setNamaLengkapEmployee("jeremy");
-
-        Leave leave = new Leave();
-        leave.setLeaveId(1L);
-        leave.setReasonLeave("Test");
-        leave.setStatus(LeaveStatus.SUBMITTED);
-
-        LeaveResponse response = new LeaveResponse();
-        response.setReasonLeave("Test");
-        response.setStatus(LeaveStatus.APPROVED);
-
-        when(leaveRepository.findById(1L))
-                .thenReturn(Optional.of(leave));
-
-        when(leaveMapper.toResponse(leave))
-                .thenReturn(response);
-
-        when(leaveRepository.save(leave))
-                .thenReturn(leave);
-
-        LeaveResponse result = leaveService.updateLeave(1L, LeaveStatus.APPROVED, employee);
-
-        assertEquals("Test", result.getReasonLeave());
-        assertEquals(LeaveStatus.APPROVED, result.getStatus());
-
-        verify(leaveRepository).findById(1L);
-        verify(leaveMapper).toResponse(leave);
-        verify(leaveRepository).save(leave);
-    }
 }

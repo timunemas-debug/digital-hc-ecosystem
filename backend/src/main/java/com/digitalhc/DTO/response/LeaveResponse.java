@@ -2,8 +2,8 @@ package com.digitalhc.DTO.response;
 
 import java.time.LocalDate;
 
-import com.digitalhc.model.Employee;
 import com.digitalhc.model.LeaveStatus;
+import com.digitalhc.model.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,5 +20,5 @@ public class LeaveResponse {
     private LocalDate endDateLeave;
     private String reasonLeave;
     private LeaveStatus status;
-    private Employee approvedBy;
+    private Role approvedBy;
 }
