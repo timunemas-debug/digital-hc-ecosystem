@@ -18,8 +18,6 @@ import com.digitalhc.model.Role;
 import com.digitalhc.repository.EmployeeRepository;
 import com.digitalhc.repository.LeaveRepository;
 
-import jakarta.annotation.Resource;
-
 @Service
 public class LeaveService {
 

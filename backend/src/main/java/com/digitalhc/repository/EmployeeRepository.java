@@ -20,6 +20,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>{
 
     Optional<Employee> findByNamaLengkapEmployee(String name);
 
+    Long countByEmployeeEmployeeId(Long employeeId);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT e FROM Employee e WHERE e.employeeId = :employeeId")
     Optional<Employee> findByEmployeeIdWithLock(@Param("employeeId") Long employeeId);

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.digitalhc.DTO.request.AttendanceRequest;
 import com.digitalhc.DTO.response.AttendanceResponse;
+import com.digitalhc.DTO.response.DashboardResponse;
 import com.digitalhc.exception.BadRequestException;
 import com.digitalhc.exception.ResourceNotFound;
 import com.digitalhc.mapper.AttendanceMapper;
@@ -145,5 +146,9 @@ public class AttendanceService {
         return attendance.stream()
                 .map(attendanceMapper::toResponse)
                 .toList();
+    }
+
+    public DashboardResponse dashboardHr(){
+        return dashboardHr();
     }
 }
