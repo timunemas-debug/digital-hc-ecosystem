@@ -1,6 +1,7 @@
 package com.digitalhc.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +21,8 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long>{
     List<Attendance> findByAttandanceStatusAndAttendanceDate(AttendanceStatus status, LocalDate attendanceDate);
 
     Optional<Attendance> findTopByAttendanceDateOrderByCheckInTimeDesc(LocalDate date);
+
+    Long countByCheckInTimeBetween(LocalDateTime start, LocalDateTime end);
+    Long countByCheckOutTimeBetween(LocalDateTime start, LocalDateTime end);
+    Long countByAttendanceDate(LocalDate attendanceDate);
 }

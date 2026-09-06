@@ -80,10 +80,6 @@ public class LeaveService {
                 .toList();
     }
 
-    public void viewRequestLeave(){
-
-    }
-
     @Transactional
     public void processLeave(Long leaveId, LeaveStatus status){
 
@@ -108,7 +104,4 @@ public class LeaveService {
         leaveRepository.save(leave);
     }
 
-    public void rejectLeave(){
-
-    }
 }

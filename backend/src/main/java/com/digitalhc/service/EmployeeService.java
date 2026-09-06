@@ -1,12 +1,15 @@
 package com.digitalhc.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.digitalhc.DTO.request.EmployeeRequest;
 import com.digitalhc.DTO.request.UpdateEmployeeRequest;
+import com.digitalhc.DTO.response.DashboardResponse;
 import com.digitalhc.DTO.response.EmployeeResponse;
 import com.digitalhc.DTO.response.UpdateEmployeeResponse;
 import com.digitalhc.exception.BadRequestException;
@@ -16,7 +19,9 @@ import com.digitalhc.mapper.UpdateEmployeeMapper;
 import com.digitalhc.model.Employee;
 import com.digitalhc.model.EmployeeStatus;
 import com.digitalhc.model.Position;
+import com.digitalhc.repository.AttendanceRepository;
 import com.digitalhc.repository.EmployeeRepository;
+import com.digitalhc.repository.LeaveRepository;
 
 @Service
 public class EmployeeService {
@@ -25,12 +30,16 @@ public class EmployeeService {
     private final EmployeeMapper employeeMapper;
     private final UpdateEmployeeMapper updateEmployeeMapper;
     private final PositionService positionService;
+    private final AttendanceRepository attendanceRepository;
+    private final LeaveRepository leaveRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, UpdateEmployeeMapper updateEmployeeMapper, PositionService positionService){
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, UpdateEmployeeMapper updateEmployeeMapper, PositionService positionService, AttendanceRepository attendanceRepository, LeaveRepository leaveRepository){
         this.employeeRepository = employeeRepository;
         this.employeeMapper = employeeMapper;
         this.updateEmployeeMapper = updateEmployeeMapper;
         this.positionService = positionService;
+        this.attendanceRepository = attendanceRepository;
+        this.leaveRepository = leaveRepository;
     }
 
     public EmployeeResponse addEmployee(EmployeeRequest request){
@@ -135,5 +144,19 @@ public class EmployeeService {
         employee.setPosition(position);
 
         return employeeMapper.toResponse(employeeRepository.save(employee));
+    }
+
+    public DashboardResponse dashboard(LocalDateTime time){
+
+        LocalDateTime start = time.toLocalDate().atStartOfDay();
+        LocalDateTime end = time.toLocalDate().atTime(LocalTime.MAX);
+
+        Long totalEmployees = employeeRepository.countByStatus(EmployeeStatus.AKTIF);
+        Long totalCheckIn = attendanceRepository.countByCheckInTimeBetween(start, end);
+        Long totalCheckOut = attendanceRepository.countByCheckOutTimeBetween(start, end);
+        Long totalAttendances = attendanceRepository.countByAttendanceDate(time.toLocalDate());
+        Long totalLeaves = leaveRepository.countByStartDateLeave(time.toLocalDate());
+
+        return new DashboardResponse(totalEmployees, totalCheckIn, totalCheckOut, totalAttendances, totalLeaves);
     }
 }

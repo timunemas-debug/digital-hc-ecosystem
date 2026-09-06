@@ -1,6 +1,7 @@
 package com.digitalhc.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>{
 
     Optional<Employee> findByNamaLengkapEmployee(String name);
 
-    Long countByEmployeeEmployeeId(Long employeeId);
+    Long countByStatus(EmployeeStatus status);
+    Long countByLeaveList();
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT e FROM Employee e WHERE e.employeeId = :employeeId")

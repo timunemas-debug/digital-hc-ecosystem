@@ -1,5 +1,6 @@
 package com.digitalhc.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import jakarta.persistence.LockModeType;
 public interface LeaveRepository extends JpaRepository<Leave, Long>{
     
     long countByEmployeeAndStatus(Employee employee, LeaveStatus status);
+    Long countByStartDateLeave(LocalDate date);
 
     List<Leave> findByEmployeeEmployeeId(Long employeeId);
 

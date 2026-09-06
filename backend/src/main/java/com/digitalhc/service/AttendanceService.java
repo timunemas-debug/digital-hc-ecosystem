@@ -147,8 +147,4 @@ public class AttendanceService {
                 .map(attendanceMapper::toResponse)
                 .toList();
     }
-
-    public DashboardResponse dashboardHr(){
-        return dashboardHr();
-    }
 }

@@ -14,5 +14,6 @@ public class DashboardResponse {
     private Long totalEmployee;
     private Long totalCheckIn;
     private Long totalCheckOut;
-    private Long totalAttendance;
+    private Long totalAttendances;
+    private Long totalLeaves;
 }
