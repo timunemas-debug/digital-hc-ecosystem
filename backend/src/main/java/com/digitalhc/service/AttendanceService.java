@@ -5,14 +5,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.digitalhc.DTO.request.AttendanceRequest;
 import com.digitalhc.DTO.response.AttendanceResponse;
-import com.digitalhc.DTO.response.DashboardResponse;
 import com.digitalhc.exception.BadRequestException;
 import com.digitalhc.exception.ResourceNotFound;
 import com.digitalhc.mapper.AttendanceMapper;
@@ -137,7 +135,7 @@ public class AttendanceService {
     
     public List<AttendanceResponse> getAttendanceByStatus(AttendanceStatus status, LocalDate date){
 
-        List<Attendance> attendance = attendanceRepository.findByAttandanceStatusAndAttendanceDate(status, date);
+        List<Attendance> attendance = attendanceRepository.findByAttendanceStatusAndAttendanceDate(status, date);
         
         if (attendance.isEmpty()) {
             throw new ResourceNotFound("Tidak ada employee dengan status" + status);

@@ -8,5 +8,5 @@ import com.digitalhc.model.Position;
 
 public interface PositionRepository extends JpaRepository<Position, Long>{
     
-    Optional<Position> findByEmployeeEmployeeId(Long employeeId);
+    Optional<Position> findByEmployeesEmployeeId(Long employeeId);
 }

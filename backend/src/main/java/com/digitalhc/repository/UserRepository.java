@@ -10,6 +10,7 @@ import com.digitalhc.model.User;
 public interface UserRepository extends JpaRepository<User, Long>{
     
     boolean existsByEmployee(Employee employee);
+    boolean existsByEmailIgnoreCase(String email);
 
     Optional<User> findByEmailIgnoreCase(String email);
 }

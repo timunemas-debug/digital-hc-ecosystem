@@ -2,7 +2,9 @@ package com.digitalhc.mapper;
 
 import org.springframework.stereotype.Component;
 
+import com.digitalhc.DTO.request.RegisterRequest;
 import com.digitalhc.DTO.request.UserRequest;
+import com.digitalhc.DTO.response.RegisterResponse;
 import com.digitalhc.DTO.response.UserResponse;
 import com.digitalhc.model.User;
 
@@ -25,5 +27,18 @@ public class UserMapper {
                                 user.getEmployee().getEmail(),
                                 user.getRole(),
                                 user.getStatus());
+    }
+
+    public User toEntity(RegisterRequest request){
+
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+
+        return user;
+    }
+
+    public RegisterResponse toRegisterResponse(User user){
+        return new RegisterResponse(user.getEmail());
     }
 }

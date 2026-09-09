@@ -32,7 +32,7 @@ public class DepartmentController {
         return departmentService.addDepartment(request);
     }
 
-    @GetMapping
+    @GetMapping("/get-all")
     public List<DepartmentResponse> getAllDepartment(){
         return departmentService.getAllDepartment();
     }
@@ -47,7 +47,7 @@ public class DepartmentController {
         return departmentService.updateDepartment(departmentId, request);
     }
 
-    @DeleteMapping("{departmentId")
+    @DeleteMapping("/{departmentId}/delete")
     public void deleteDepartment(@PathVariable Long departmentId){
         departmentService.deleteDepartment(departmentId);
     }
