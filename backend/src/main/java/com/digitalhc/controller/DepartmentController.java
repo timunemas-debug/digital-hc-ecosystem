@@ -14,7 +14,7 @@ import com.digitalhc.DTO.request.DepartmentRequest;
 import com.digitalhc.DTO.response.DepartmentResponse;
 import com.digitalhc.service.DepartmentService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 @RestController
@@ -27,7 +27,7 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public DepartmentResponse addDepartment(@Valid @RequestBody DepartmentRequest request){
         return departmentService.addDepartment(request);
     }

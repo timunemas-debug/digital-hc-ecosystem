@@ -11,7 +11,7 @@ import lombok.Setter;
 public class DepartmentRequest {
     
     @NotNull(message = "Department wajib di isi!")
-    private DepartmentName departementName;
+    private DepartmentName departmentName;
 
     private String description;
 }

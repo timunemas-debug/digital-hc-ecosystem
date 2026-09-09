@@ -12,7 +12,7 @@ public class DepartmentMapper {
     public Department toEntity(DepartmentRequest request){
 
         Department department = new Department();
-        department.setDepartmentName(request.getDepartementName());
+        department.setDepartmentName(request.getDepartmentName());
         department.setDescription(request.getDescription());
         
         return department;

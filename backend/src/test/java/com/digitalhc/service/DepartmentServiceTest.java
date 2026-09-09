@@ -42,7 +42,7 @@ public class DepartmentServiceTest {
         department.setDescription("Test");
 
         DepartmentRequest request = new DepartmentRequest();
-        request.setDepartementName(DepartmentName.EMPLOYEE);
+        request.setDepartmentName(DepartmentName.EMPLOYEE);
         request.setDescription("Test");
 
         DepartmentResponse response = new DepartmentResponse();
@@ -148,7 +148,7 @@ public class DepartmentServiceTest {
         department.setDepartmentName(DepartmentName.ADMIN);
 
         DepartmentRequest request = new DepartmentRequest();
-        request.setDepartementName(DepartmentName.EMPLOYEE);
+        request.setDepartmentName(DepartmentName.EMPLOYEE);
 
         DepartmentResponse response = new DepartmentResponse();
         response.setDepartementName(DepartmentName.EMPLOYEE);

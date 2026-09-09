@@ -22,6 +22,7 @@ import com.digitalhc.model.Position;
 import com.digitalhc.repository.AttendanceRepository;
 import com.digitalhc.repository.EmployeeRepository;
 import com.digitalhc.repository.LeaveRepository;
+import com.digitalhc.repository.PositionRepository;
 
 @Service
 public class EmployeeService {
@@ -32,23 +33,29 @@ public class EmployeeService {
     private final PositionService positionService;
     private final AttendanceRepository attendanceRepository;
     private final LeaveRepository leaveRepository;
+    private final PositionRepository positionRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, UpdateEmployeeMapper updateEmployeeMapper, PositionService positionService, AttendanceRepository attendanceRepository, LeaveRepository leaveRepository){
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, UpdateEmployeeMapper updateEmployeeMapper, PositionService positionService, AttendanceRepository attendanceRepository, LeaveRepository leaveRepository, PositionRepository positionRepository){
         this.employeeRepository = employeeRepository;
         this.employeeMapper = employeeMapper;
         this.updateEmployeeMapper = updateEmployeeMapper;
         this.positionService = positionService;
         this.attendanceRepository = attendanceRepository;
         this.leaveRepository = leaveRepository;
+        this.positionRepository = positionRepository;
     }
 
     public EmployeeResponse addEmployee(EmployeeRequest request){
+
+        Position position = positionRepository.findById(request.getPositionId())
+                .orElseThrow(() -> new ResourceNotFound("Position tidak ditemukan!"));
 
         if(employeeRepository.existsByNamaLengkapEmployee(request.getNamaLengkapEmployee())){
             throw new IllegalArgumentException("Nama tersebut sudah digunakan!");
         }
 
         Employee employee = employeeMapper.toEntity(request);
+        employee.setPosition(position);
 
         return employeeMapper.toResponse(employeeRepository.save(employee));
     }

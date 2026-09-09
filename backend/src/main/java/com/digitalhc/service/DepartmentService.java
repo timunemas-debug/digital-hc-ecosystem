@@ -25,7 +25,7 @@ public class DepartmentService {
 
     public DepartmentResponse addDepartment(DepartmentRequest request){
 
-        if(departmentRepository.existsByDepartmentName(request.getDepartementName())){
+        if(departmentRepository.existsByDepartmentName(request.getDepartmentName())){
             throw new BadRequestException("Department sudah dibuat!");
         }
 
@@ -54,12 +54,12 @@ public class DepartmentService {
         Department department = departmentRepository.findById(departmentId)
                     .orElseThrow(() -> new ResourceNotFound("Department tidak ditemukan!"));
 
-        if(!department.getDepartmentName().equals(request.getDepartementName()) &&
-            departmentRepository.existsByDepartmentName(request.getDepartementName())){
+        if(!department.getDepartmentName().equals(request.getDepartmentName()) &&
+            departmentRepository.existsByDepartmentName(request.getDepartmentName())){
                 throw new BadRequestException("Department sudah dibuat!");
             }
 
-        department.setDepartmentName(request.getDepartementName());
+        department.setDepartmentName(request.getDepartmentName());
         department.setDescription(request.getDescription());
 
         return departmentMapper.toResponse(departmentRepository.save(department));

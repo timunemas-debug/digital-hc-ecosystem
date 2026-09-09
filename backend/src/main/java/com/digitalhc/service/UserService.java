@@ -2,6 +2,7 @@ package com.digitalhc.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.digitalhc.DTO.request.UpdateUserRequest;
@@ -24,12 +25,14 @@ public class UserService {
     private final UserMapper userMapper;
     private final UpdateUserMapper updateUserMapper;
     private final EmployeeService employeeService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, UpdateUserMapper updateUserMapper, EmployeeService employeeService){
+    public UserService(UserRepository userRepository, UserMapper userMapper, UpdateUserMapper updateUserMapper, EmployeeService employeeService, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.updateUserMapper = updateUserMapper;
         this.employeeService =employeeService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponse addUser(UserRequest request){
@@ -41,10 +44,12 @@ public class UserService {
         }
 
         User user = userMapper.toEntity(request);
-
+        user.setEmail(employee.getEmail());
+        user.setRole(request.getRole());
         user.setEmployee(employee);
         user.setStatus(UserStatus.AKTIF);
 
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userMapper.toResponse(userRepository.save(user));
     }
 
