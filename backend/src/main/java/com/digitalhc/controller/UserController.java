@@ -2,6 +2,7 @@ package com.digitalhc.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,31 +29,37 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add-user")
     public UserResponse addUser(@Valid @RequestBody UserRequest request){
         return userService.addUser(request);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<UserResponse> getAllUser(){
         return userService.getAllUser();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{userId}")
     public UserResponse getUserById(@PathVariable Long userId){
         return userService.getUserResponseById(userId);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{userId}/update-user")
     public UpdateUserResponse updateUser(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request){
         return userService.updateUser(userId, request);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{userId}/non-aktif-user")
     public UserResponse nonAktifUser(@PathVariable Long userId){
         return userService.nonAktifUser(userId);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{userId}/locked-user")
     public UserResponse lockedUser(@PathVariable Long userId){
         return userService.lockedUser(userId);

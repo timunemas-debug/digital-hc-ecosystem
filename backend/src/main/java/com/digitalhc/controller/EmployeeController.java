@@ -1,5 +1,8 @@
 package com.digitalhc.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +24,15 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add-employee")
     public EmployeeResponse addEmployee(@Valid @RequestBody EmployeeRequest request){
         return employeeService.addEmployee(request);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{employeeId}")
+    public EmployeeResponse getEmployeeById(@PathVariable Long employeeId){
+        return employeeService.getEmployeeResponseById(employeeId);
     }
 }

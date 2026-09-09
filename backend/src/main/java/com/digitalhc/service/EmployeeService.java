@@ -56,6 +56,7 @@ public class EmployeeService {
 
         Employee employee = employeeMapper.toEntity(request);
         employee.setPosition(position);
+        employee.setStatus(EmployeeStatus.AKTIF);
 
         return employeeMapper.toResponse(employeeRepository.save(employee));
     }

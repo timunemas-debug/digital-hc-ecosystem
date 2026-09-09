@@ -30,7 +30,8 @@ public class EmployeeMapper {
                                     employee.getNomerHpEmployee(),
                                     employee.getTanggalLahirEmployee(),
                                     employee.getTanggalBergabungEmployee(),
-                                    employee.getPosition().getPositionName()
+                                    employee.getPosition().getPositionName(),
+                                    employee.getStatus()
                                     );
     }
 }

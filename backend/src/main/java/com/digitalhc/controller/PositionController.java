@@ -1,5 +1,6 @@
 package com.digitalhc.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class PositionController {
         this.positionService = positionService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     public PositionResponse addPosition(@Valid @RequestBody PositionRequest request){
         return positionService.addPosition(request);

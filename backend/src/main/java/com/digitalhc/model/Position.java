@@ -3,6 +3,8 @@ package com.digitalhc.model;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +28,8 @@ public class Position {
     private Long positionId;
 
     private String positionName;
+
+    @Enumerated(EnumType.STRING)
     private JobLevel jobLevel;
 
     @ManyToOne

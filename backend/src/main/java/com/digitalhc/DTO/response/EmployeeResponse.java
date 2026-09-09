@@ -2,6 +2,8 @@ package com.digitalhc.DTO.response;
 
 import java.time.LocalDate;
 
+import com.digitalhc.model.EmployeeStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +22,5 @@ public class EmployeeResponse {
     private LocalDate tanggalLahirEmployee;
     private LocalDate tanggalBergabungEmployee;
     private String positionName;
+    private EmployeeStatus status;
 }
