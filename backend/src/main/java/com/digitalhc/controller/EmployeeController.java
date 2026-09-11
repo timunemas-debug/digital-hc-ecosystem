@@ -40,29 +40,33 @@ public class EmployeeController {
     public EmployeeResponse addEmployee(@Valid @RequestBody EmployeeRequest request){
         return employeeService.addEmployee(request);
     }
-
+    
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{employeeId}")
+    @GetMapping("/employee-id/{employeeId}")
     public EmployeeResponse getEmployeeById(@PathVariable Long employeeId){
         return employeeService.getEmployeeResponseById(employeeId);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/nama/{namaLengkapEmployee}")
     public EmployeeResponse getEmployeeByNama(@PathVariable String namaLengkapEmployee){
         return employeeService.getEmployeeByNama(namaLengkapEmployee);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/tanggal/{tanggal}")
     public List<EmployeeResponse> getEmployeeByTanggalBergabung(@PathVariable LocalDate tanggal){
         return employeeService.getEmployeeByTanggalBergabungSetelah(tanggal);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/tanggal-bergabung-between")
     public List<EmployeeResponse> getEmployeeBetween(@RequestParam LocalDate tanggal1, @RequestParam LocalDate tanggal2){
         return employeeService.getEmployeeByTanggalBergabungBetweeen(tanggal1, tanggal2);
     }
 
-    @GetMapping("/{status}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/status/{status}")
     public List<EmployeeResponse> getEmployeeByStatus(@PathVariable EmployeeStatus status){
         return employeeService.getEmployeeStatus(status);
     }
@@ -77,7 +81,7 @@ public class EmployeeController {
         return employeeService.updateProfileEmployee(employeeId, request);
     }
 
-    @PatchMapping("/{employeeId}/changePosition")
+    @PatchMapping("/{employeeId}/assignPosition")
     public EmployeeResponse assignPosition(@PathVariable Long employeeId, @RequestParam Long positionId){
         return employeeService.assignPosition(employeeId, positionId);
     }

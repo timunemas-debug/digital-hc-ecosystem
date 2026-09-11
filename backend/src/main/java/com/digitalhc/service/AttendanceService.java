@@ -9,7 +9,7 @@ import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.digitalhc.DTO.request.AttendanceRequest;
+import com.digitalhc.DTO.response.AttendanceCheckOutResponse;
 import com.digitalhc.DTO.response.AttendanceResponse;
 import com.digitalhc.exception.BadRequestException;
 import com.digitalhc.exception.ResourceNotFound;
@@ -19,6 +19,7 @@ import com.digitalhc.model.AttendanceStatus;
 import com.digitalhc.model.Employee;
 import com.digitalhc.repository.AttendanceRepository;
 import com.digitalhc.repository.EmployeeRepository;
+import com.digitalhc.security.SecurityService;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +29,14 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final AttendanceMapper attendanceMapper;
     private final EmployeeRepository employeeRepository;
+    private final SecurityService securityService;
     private static final ZoneId ZONE_JAKARTA = ZoneId.of("Asia/Jakarta");
 
-    public AttendanceService(AttendanceRepository attendanceRepository, AttendanceMapper attendanceMapper, EmployeeRepository employeeRepository){
+    public AttendanceService(AttendanceRepository attendanceRepository, AttendanceMapper attendanceMapper, EmployeeRepository employeeRepository, SecurityService securityService){
         this.attendanceRepository = attendanceRepository;
         this.attendanceMapper = attendanceMapper;
         this.employeeRepository = employeeRepository;
+        this.securityService = securityService;
     }
 
     private Employee getEmployeeById(Long employeeId){
@@ -48,9 +51,10 @@ public class AttendanceService {
     }
 
     @Transactional
-    public AttendanceResponse checkIn(AttendanceRequest request){
+    public AttendanceResponse checkIn(){
         
-        Employee employee = getEmployeeById(request.getEmployeeId());
+        Long employeeId = securityService.getCurrentEmployeeId();
+        Employee employee = getEmployeeById(employeeId);
         LocalDate today = LocalDate.now(ZONE_JAKARTA);
         LocalDateTime now = LocalDateTime.now(ZONE_JAKARTA);
 
@@ -58,7 +62,7 @@ public class AttendanceService {
             throw new BadRequestException("Employee sudah melakukan check in hari ini");
         }
 
-        Attendance attendance = attendanceMapper.toEntity(request);
+        Attendance attendance = new Attendance();
         attendance.setEmployee(employee);
         attendance.setAttendanceDate(today);
         attendance.setCheckIn(now);
@@ -74,10 +78,11 @@ public class AttendanceService {
     }
 
     @Transactional
-    public void checkOut(Long employeeId){
+    public AttendanceCheckOutResponse checkOut(){
 
         LocalDate today = LocalDate.now(ZONE_JAKARTA);
 
+        Long employeeId = securityService.getCurrentEmployeeId();
         getEmployeeById(employeeId);
 
         Attendance attendance = attendanceRepository.findByEmployeeEmployeeIdAndAttendanceDate(employeeId, today)
@@ -89,7 +94,9 @@ public class AttendanceService {
 
         attendance.setCheckOut(LocalDateTime.now(ZONE_JAKARTA));
 
-        attendanceRepository.save(attendance);
+        Attendance savedAttendance = attendanceRepository.save(attendance);
+
+        return attendanceMapper.toResponseCheckOut(savedAttendance);
     }
 
     public AttendanceResponse getAttendanceResponseById(Long attendanceId){

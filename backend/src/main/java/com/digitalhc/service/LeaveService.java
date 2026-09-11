@@ -31,6 +31,8 @@ public class LeaveService {
         this.employeeRepository = employeeRepository;
     }
 
+
+    //UNTUK KARYAWAN MELAKUKAN PENGAJUAN CUTI
     @Transactional
     public LeaveResponse addLeave(Long employeeId, LeaveRequest request){
 
@@ -59,6 +61,7 @@ public class LeaveService {
         return leaveMapper.toResponse(leaveRepository.save(leave));
     }
 
+    //UNTUK SETIAP MANAGER DAN JUGA ADMIN
     public List<LeaveResponse> getAllLeave(){
         return leaveRepository.findAll()
                 .stream()
@@ -66,12 +69,14 @@ public class LeaveService {
                 .toList();
     }
 
+    //UNTUK SETIAP MANAGER DAN JUGA ADMIN
     public Leave getLeaveByLeaveId(Long leaveId){
 
         return leaveRepository.findById(leaveId)
                 .orElseThrow(() -> new ResourceNotFound("Leave tidak ditemukan!"));
     }
 
+    //UNTUK SETIAP MANAGER DAN JUGA ADMIN
     public List<LeaveResponse> getLeaveResponseByEmployeeId(Long employeeId){
 
         return leaveRepository.findByEmployeeEmployeeId(employeeId)
@@ -80,6 +85,7 @@ public class LeaveService {
                 .toList();
     }
 
+    //UNTUK SETIAP MANAGER YANG MELAKUKAN PROCESS LEAVE INI
     @Transactional
     public void processLeave(Long leaveId, LeaveStatus status){
 

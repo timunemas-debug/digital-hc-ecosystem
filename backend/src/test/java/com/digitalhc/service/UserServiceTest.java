@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.digitalhc.DTO.request.UpdateUserRequest;
 import com.digitalhc.DTO.request.UserRequest;
@@ -38,6 +39,9 @@ public class UserServiceTest {
 
     @Mock
     EmployeeService employeeService;
+
+    @Mock
+    PasswordEncoder passwordEncoder;
 
     @InjectMocks
     UserService userService;
@@ -90,6 +94,7 @@ public class UserServiceTest {
         assertEquals(Role.ROLE_EMPLOYEE, result.getRole());
         assertEquals(UserStatus.AKTIF, result.getStatus());
 
+        verify(passwordEncoder).encode("12345");
         verify(employeeService).getEmployeeById(1L);
         verify(userRepository).existsByEmployee(employee);
         verify(userRepository).save(user);

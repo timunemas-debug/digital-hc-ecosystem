@@ -22,7 +22,9 @@ import com.digitalhc.mapper.EmployeeMapper;
 import com.digitalhc.mapper.UpdateEmployeeMapper;
 import com.digitalhc.model.Employee;
 import com.digitalhc.model.EmployeeStatus;
+import com.digitalhc.model.Position;
 import com.digitalhc.repository.EmployeeRepository;
+import com.digitalhc.repository.PositionRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
@@ -36,11 +38,18 @@ public class EmployeeServiceTest {
     @Mock
     UpdateEmployeeMapper updateEmployeeMapper;
 
+    @Mock
+    PositionRepository positionRepository;
+
     @InjectMocks
     EmployeeService employeeService;
 
     @Test
     public void shouldAddEmployee(){
+
+        Position position = new Position();
+        position.setPositionId(1L);
+        position.setPositionName("Admin");
 
         Employee employee = new Employee();
         employee.setNik(1L);
@@ -50,6 +59,7 @@ public class EmployeeServiceTest {
         employee.setTanggalBergabungEmployee(LocalDate.of(2026,8,1));
         employee.setCreateAt(LocalDate.of(2026,8,1));
         employee.setUpdateAt(LocalDate.of(2027, 8, 1));
+        employee.setPosition(position);
 
         EmployeeRequest request = new EmployeeRequest();
         request.setNik(1L);
@@ -57,6 +67,7 @@ public class EmployeeServiceTest {
         request.setNomerHpEmployee(012345L);
         request.setTanggalLahirEmployee(LocalDate.of(2004, 1, 18));
         request.setTanggalBergabungEmployee(LocalDate.of(2026,8,1));
+        request.setPositionId(1L);
 
         EmployeeResponse response = new EmployeeResponse();
         response.setNik(1L);
@@ -64,6 +75,9 @@ public class EmployeeServiceTest {
         response.setNomerHpEmployee(012345L);
         response.setTanggalLahirEmployee(LocalDate.of(2004, 1, 18));
         response.setTanggalBergabungEmployee(LocalDate.of(2026,8,1));
+
+        when(positionRepository.findById(1L))
+                .thenReturn(Optional.of(position));
 
         when(employeeRepository.existsByNamaLengkapEmployee("Jeremy"))
                 .thenReturn(false);
@@ -82,6 +96,7 @@ public class EmployeeServiceTest {
         assertEquals("Jeremy", result.getNamaLengkapEmployee());
         assertEquals(012345L, result.getNomerHpEmployee());
 
+        verify(positionRepository).findById(1L);
         verify(employeeRepository).existsByNamaLengkapEmployee("Jeremy");
         verify(employeeRepository).save(employee);
         verify(employeeMapper).toEntity(request);

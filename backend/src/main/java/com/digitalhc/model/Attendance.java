@@ -44,8 +44,12 @@ public class Attendance {
     @Column(name = "attendance_date", nullable = false)
     private LocalDate attendanceDate;
     private LocalDateTime checkIn;
+
+    @Column(nullable = false)
     private LocalDateTime checkOut;
-    private LocalDateTime lateMinutes;
+    
+    private Long lateMinutes;
+    private String message;
 
     @Enumerated(EnumType.STRING)
     private AttendanceStatus attendanceStatus;
