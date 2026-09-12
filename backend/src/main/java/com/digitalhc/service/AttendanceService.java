@@ -1,5 +1,6 @@
 package com.digitalhc.service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -57,17 +58,25 @@ public class AttendanceService {
         Employee employee = getEmployeeById(employeeId);
         LocalDate today = LocalDate.now(ZONE_JAKARTA);
         LocalDateTime now = LocalDateTime.now(ZONE_JAKARTA);
+        LocalTime batasMasuk = LocalTime.of(9, 15);
+        LocalTime checkIn = now.toLocalTime();
+        Long lateMinutes = 0L;
 
         if (attendanceRepository.findByEmployeeEmployeeIdAndAttendanceDate(employee.getEmployeeId(), today).isPresent()) {
             throw new BadRequestException("Employee sudah melakukan check in hari ini");
+        }
+
+        if (checkIn.isAfter(batasMasuk)) {
+            lateMinutes = Duration.between(batasMasuk, checkIn).toMinutes();
         }
 
         Attendance attendance = new Attendance();
         attendance.setEmployee(employee);
         attendance.setAttendanceDate(today);
         attendance.setCheckIn(now);
+        attendance.setLateMinutes(lateMinutes);
         attendance.setAttendanceStatus(
-            now.toLocalTime().isAfter(LocalTime.of(9, 15)) ? AttendanceStatus.TELAT : AttendanceStatus.HADIR
+            checkIn.isAfter(batasMasuk) ? AttendanceStatus.TELAT : AttendanceStatus.HADIR
         );
         
         try {
@@ -81,6 +90,9 @@ public class AttendanceService {
     public AttendanceCheckOutResponse checkOut(){
 
         LocalDate today = LocalDate.now(ZONE_JAKARTA);
+        LocalTime batasKerja = LocalTime.of(16, 15);
+        LocalDateTime now = LocalDateTime.now(ZONE_JAKARTA);
+        LocalTime checkOut = now.toLocalTime();
 
         Long employeeId = securityService.getCurrentEmployeeId();
         getEmployeeById(employeeId);
@@ -90,6 +102,10 @@ public class AttendanceService {
 
         if (attendance.getCheckOut() != null) {
             throw new BadRequestException("Employee sudah melakukan check out");
+        }
+
+        if (checkOut.isBefore(batasKerja)) {
+            throw new BadRequestException("Anda tidak bisa melakukan checkOut!");
         }
 
         attendance.setCheckOut(LocalDateTime.now(ZONE_JAKARTA));

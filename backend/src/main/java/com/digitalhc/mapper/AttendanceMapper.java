@@ -13,7 +13,7 @@ public class AttendanceMapper {
         return new AttendanceResponse("Anda berhasil checkIn!",
                                       attendance.getAttendanceDate(),
                                       attendance.getCheckIn(),
-                                      attendance.getCheckOut(),
+                                      attendance.getAttendanceStatus(),
                                       attendance.getLateMinutes());
     }
 

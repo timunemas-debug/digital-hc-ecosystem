@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.digitalhc.DTO.response.AttendanceCheckOutResponse;
 import com.digitalhc.DTO.response.AttendanceResponse;
 import com.digitalhc.service.AttendanceService;
 
@@ -31,13 +32,19 @@ public class AttendanceController {
 
     @PreAuthorize("hasRole('EMPLOYEE')")
     @PostMapping("/checkOut")
-    public void checkOut(){
-        attendanceService.checkOut();
+    public AttendanceCheckOutResponse checkOut(){
+        return attendanceService.checkOut();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/attendance-employee/{employeeId}")
     public List<AttendanceResponse> getAttendanceByEmployeeId(@PathVariable Long employeeId){
         return attendanceService.getAttendanceByEmployee(employeeId);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/get-all-attendance")
+    public List<AttendanceResponse> getAllAttendance(){
+        return attendanceService.getAllAttendance();
     }
 }
