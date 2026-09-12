@@ -12,11 +12,15 @@ import com.digitalhc.exception.BadRequestException;
 import com.digitalhc.exception.ResourceNotFound;
 import com.digitalhc.mapper.LeaveMapper;
 import com.digitalhc.model.Employee;
+import com.digitalhc.model.EmployeeStatus;
 import com.digitalhc.model.Leave;
+import com.digitalhc.model.LeaveBalance;
 import com.digitalhc.model.LeaveStatus;
 import com.digitalhc.model.Role;
 import com.digitalhc.repository.EmployeeRepository;
+import com.digitalhc.repository.LeaveBalanceRepository;
 import com.digitalhc.repository.LeaveRepository;
+import com.digitalhc.security.SecurityService;
 
 @Service
 public class LeaveService {
@@ -24,21 +28,43 @@ public class LeaveService {
     private final LeaveRepository leaveRepository;
     private final LeaveMapper leaveMapper;
     private final EmployeeRepository employeeRepository;
+    private final SecurityService securityService;
+    private final LeaveBalanceRepository leaveBalanceRepository;
 
-    public LeaveService(LeaveRepository leaveRepository, LeaveMapper leaveMapper, EmployeeRepository employeeRepository){
+    public LeaveService(LeaveRepository leaveRepository, LeaveMapper leaveMapper, EmployeeRepository employeeRepository, SecurityService securityService, LeaveBalanceRepository leaveBalanceRepository){
         this.leaveRepository = leaveRepository;
         this.leaveMapper = leaveMapper;
         this.employeeRepository = employeeRepository;
+        this.securityService = securityService;
+        this.leaveBalanceRepository = leaveBalanceRepository;
     }
 
 
     //UNTUK KARYAWAN MELAKUKAN PENGAJUAN CUTI
     @Transactional
-    public LeaveResponse addLeave(Long employeeId, LeaveRequest request){
+    public LeaveResponse addLeave(LeaveRequest request){
+
+        Long employeeId = securityService.getCurrentEmployeeId();
 
         Employee employee = employeeRepository.findByEmployeeIdWithLock(employeeId)
                 .orElseThrow(() -> new ResourceNotFound("Employee tidak ditemukan!"));
-                
+
+        List<LeaveBalance> leaveBalance = leaveBalanceRepository.findByEmployeeEmployeeId(employeeId);
+
+        boolean hasActiveLeave = leaveRepository.existsByEmployeeEmployeeIdAndStatusAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(employeeId, LeaveStatus.SUBMITTED, request.getStartDateLeave(), request.getEndDateLeave());
+
+        if (hasActiveLeave) {
+            throw new BadRequestException("Pegawai sudah memiliki cuti ditanggal tersebut!");
+        }
+
+        if (employee.getStatus() != EmployeeStatus.AKTIF) {
+            throw new BadRequestException("Employee tidak aktif!");
+        }
+
+        if (leaveBalance.isEmpty()) {
+            throw new BadRequestException("Leave balance anda sudah tidak ada!");
+        }
+
         if (employee.getTanggalBergabungEmployee() == null) {
             throw new BadRequestException("Tanggal bergabung belum tersedia!");
         }

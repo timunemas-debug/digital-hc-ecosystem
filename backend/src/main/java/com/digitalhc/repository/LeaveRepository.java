@@ -22,6 +22,8 @@ public interface LeaveRepository extends JpaRepository<Leave, Long>{
 
     List<Leave> findByEmployeeEmployeeId(Long employeeId);
 
+    boolean existsByEmployeeEmployeeIdAndStatusAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(Long employeeId, LeaveStatus status, LocalDate startDateLeave, LocalDate endDateLeave);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT l FROM Leave l WHERE l.leaveId = :leaveId")
     Optional<Leave> findByLeaveIdWithLock(@Param("leaveId") Long leaveId);

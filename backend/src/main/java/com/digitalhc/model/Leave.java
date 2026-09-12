@@ -31,7 +31,7 @@ public class Leave {
     private Employee employee;
 
     private LocalDate startDateLeave;
-    private LocalDate endDataLeave;
+    private LocalDate endDateLeave;
     private String reasonLeave;
     private LeaveStatus status;
 

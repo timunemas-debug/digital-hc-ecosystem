@@ -17,10 +17,14 @@ import com.digitalhc.DTO.request.LeaveRequest;
 import com.digitalhc.DTO.response.LeaveResponse;
 import com.digitalhc.mapper.LeaveMapper;
 import com.digitalhc.model.Employee;
+import com.digitalhc.model.EmployeeStatus;
 import com.digitalhc.model.Leave;
+import com.digitalhc.model.LeaveBalance;
 import com.digitalhc.model.LeaveStatus;
 import com.digitalhc.repository.EmployeeRepository;
+import com.digitalhc.repository.LeaveBalanceRepository;
 import com.digitalhc.repository.LeaveRepository;
+import com.digitalhc.security.SecurityService;
 
 @ExtendWith(MockitoExtension.class)
 public class LeaveServiceTest {
@@ -34,6 +38,12 @@ public class LeaveServiceTest {
     @Mock
     EmployeeRepository employeeRepository;
 
+    @Mock
+    SecurityService securityService;
+
+    @Mock
+    LeaveBalanceRepository leaveBalanceRepository;
+
     @InjectMocks
     LeaveService leaveService;
 
@@ -44,6 +54,11 @@ public class LeaveServiceTest {
         employee.setEmployeeId(1L);
         employee.setNamaLengkapEmployee("Jeremy");
         employee.setTanggalBergabungEmployee(LocalDate.of(2, 4, 12));
+        employee.setStatus(EmployeeStatus.AKTIF);
+
+        LeaveBalance leaveBalance = new LeaveBalance();
+        leaveBalance.setEmployee(employee);
+        leaveBalance.setTotalLeaves(12);
 
         Leave leave = new Leave();
         leave.setReasonLeave("Test");
@@ -53,11 +68,21 @@ public class LeaveServiceTest {
         LeaveRequest request = new LeaveRequest();
         request.setReasonLeave("Test");
         request.setStartDateLeave(LocalDate.of(2026, 7, 5));
+        request.setEndDateLeave(LocalDate.of(2026, 7, 7));
 
         LeaveResponse response = new LeaveResponse();
         response.setReasonLeave("Test");
         response.setStartDateLeave(LocalDate.of(2026, 7, 5));
         response.setStatus(LeaveStatus.SUBMITTED);
+
+        when(securityService.getCurrentEmployeeId())
+                .thenReturn(1L);
+
+        when(leaveBalanceRepository.findByEmployeeEmployeeId(1L))
+                .thenReturn(List.of(leaveBalance));
+
+        when(leaveRepository.existsByEmployeeEmployeeIdAndStatusAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(1L, LeaveStatus.SUBMITTED, request.getStartDateLeave(), request.getEndDateLeave()))
+                .thenReturn(false);
 
         when(employeeRepository.findByEmployeeIdWithLock(1L))
                 .thenReturn(Optional.of(employee));
@@ -74,7 +99,7 @@ public class LeaveServiceTest {
         when(leaveRepository.save(leave))
                 .thenReturn(leave);
 
-        LeaveResponse result = leaveService.addLeave(1L, request);
+        LeaveResponse result = leaveService.addLeave(request);
 
         assertEquals("Test", result.getReasonLeave());
         assertEquals(LocalDate.of(2026, 7, 5), result.getStartDateLeave());

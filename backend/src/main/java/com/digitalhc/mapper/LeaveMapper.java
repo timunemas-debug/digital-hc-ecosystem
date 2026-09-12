@@ -13,7 +13,7 @@ public class LeaveMapper {
 
         Leave leave = new Leave();
         leave.setStartDateLeave(request.getStartDateLeave());
-        leave.setEndDataLeave(request.getEndDateLeave());
+        leave.setEndDateLeave(request.getEndDateLeave());
         leave.setReasonLeave(request.getReasonLeave());
 
         return leave;
@@ -21,7 +21,7 @@ public class LeaveMapper {
 
     public LeaveResponse toResponse(Leave leave){
         return new LeaveResponse(leave.getStartDateLeave(),
-                                 leave.getEndDataLeave(),
+                                 leave.getEndDateLeave(),
                                  leave.getReasonLeave(),
                                  leave.getStatus(),
                                  leave.getApprovedBy()
