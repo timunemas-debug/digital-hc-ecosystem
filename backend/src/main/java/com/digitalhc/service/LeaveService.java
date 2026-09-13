@@ -39,7 +39,6 @@ public class LeaveService {
         this.leaveBalanceRepository = leaveBalanceRepository;
     }
 
-
     //UNTUK KARYAWAN MELAKUKAN PENGAJUAN CUTI
     @Transactional
     public LeaveResponse addLeave(LeaveRequest request){
@@ -62,7 +61,7 @@ public class LeaveService {
         }
 
         if (leaveBalance.isEmpty()) {
-            throw new BadRequestException("Leave balance anda sudah tidak ada!");
+            throw new BadRequestException("Anda tidak memiliki leave balance!");
         }
 
         if (employee.getTanggalBergabungEmployee() == null) {

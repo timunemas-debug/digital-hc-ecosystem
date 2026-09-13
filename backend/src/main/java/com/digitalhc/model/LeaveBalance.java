@@ -27,5 +27,5 @@ public class LeaveBalance {
     private Employee employee;
 
     private int totalLeaves = 12;
-    private int usedLeaves;
+    private int usedLeaves = 0;
 }
