@@ -79,7 +79,7 @@ public class LeaveServiceTest {
                 .thenReturn(1L);
 
         when(leaveBalanceRepository.findByEmployeeEmployeeId(1L))
-                .thenReturn(List.of(leaveBalance));
+                .thenReturn(Optional.of(leaveBalance));
 
         when(leaveRepository.existsByEmployeeEmployeeIdAndStatusAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(1L, LeaveStatus.SUBMITTED, request.getStartDateLeave(), request.getEndDateLeave()))
                 .thenReturn(false);

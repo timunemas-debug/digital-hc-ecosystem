@@ -1,7 +1,9 @@
 package com.digitalhc.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +50,7 @@ public class LeaveService {
         Employee employee = employeeRepository.findByEmployeeIdWithLock(employeeId)
                 .orElseThrow(() -> new ResourceNotFound("Employee tidak ditemukan!"));
 
-        List<LeaveBalance> leaveBalance = leaveBalanceRepository.findByEmployeeEmployeeId(employeeId);
+        Optional<LeaveBalance> leaveBalance = leaveBalanceRepository.findByEmployeeEmployeeId(employeeId);
 
         boolean hasActiveLeave = leaveRepository.existsByEmployeeEmployeeIdAndStatusAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(employeeId, LeaveStatus.SUBMITTED, request.getStartDateLeave(), request.getEndDateLeave());
 
@@ -116,17 +118,47 @@ public class LeaveService {
 
         Leave leave = leaveRepository.findByLeaveIdWithLock(leaveId)
                 .orElseThrow(() -> new ResourceNotFound("Leave dengan id tersebut tidak ditemukan!"));
+                
+        if (leave.getEmployee() == null) {
+            throw new ResourceNotFound("Employee pemilik leave tidak ditemukan!");
+        }
+
+        Employee employee = leave.getEmployee();
 
         if (leave.getStatus() != LeaveStatus.SUBMITTED) {
-            throw new BadRequestException("Status leave sudah di proses dan tidak dapat diubah!");
+            throw new BadRequestException("Status leave sudah diproses dan tidak dapat diubah!");
         }
 
         if (status != LeaveStatus.APPROVED && status != LeaveStatus.REJECTED) {
             throw new BadRequestException("Status hanya dapat menjadi Apprved atau Rejected");
         }
+        
+        if (employee.getStatus() != EmployeeStatus.AKTIF) {
+            throw new BadRequestException("Employee sudah tidak aktif!");
+        }
 
         if (leave.getApprovedBy() != null) {
             throw new BadRequestException("Leave sudah di proses");
+        }
+
+        if (status == LeaveStatus.APPROVED) {
+            Long employeeId = employee.getEmployeeId();
+
+            LeaveBalance leaveBalance = leaveBalanceRepository.findByEmployeeEmployeeId(employeeId)
+                    .orElseThrow(() -> new ResourceNotFound("Leave balance employee tidak ditemukan!"));
+
+            int availableLeaves = leaveBalance.getTotalLeaves() - leaveBalance.getUsedLeaves();
+
+            int totalDays = (int) ChronoUnit.DAYS.between(leave.getStartDateLeave(), leave.getEndDateLeave()) + 1;
+
+
+            if (availableLeaves < totalDays) {
+                throw new BadRequestException("Saldo leave tidak cukup!");
+            }
+
+            leaveBalance.setUsedLeaves(leaveBalance.getUsedLeaves() + totalDays);
+
+            leaveBalanceRepository.save(leaveBalance);
         }
 
         leave.setApprovedBy(Role.ROLE_HC_MANAGER);
