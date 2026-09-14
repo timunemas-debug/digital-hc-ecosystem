@@ -19,9 +19,11 @@ import com.digitalhc.model.Leave;
 import com.digitalhc.model.LeaveBalance;
 import com.digitalhc.model.LeaveStatus;
 import com.digitalhc.model.Role;
+import com.digitalhc.model.User;
 import com.digitalhc.repository.EmployeeRepository;
 import com.digitalhc.repository.LeaveBalanceRepository;
 import com.digitalhc.repository.LeaveRepository;
+import com.digitalhc.repository.UserRepository;
 import com.digitalhc.security.SecurityService;
 
 @Service
@@ -32,13 +34,15 @@ public class LeaveService {
     private final EmployeeRepository employeeRepository;
     private final SecurityService securityService;
     private final LeaveBalanceRepository leaveBalanceRepository;
+    private final UserRepository userRepository;
 
-    public LeaveService(LeaveRepository leaveRepository, LeaveMapper leaveMapper, EmployeeRepository employeeRepository, SecurityService securityService, LeaveBalanceRepository leaveBalanceRepository){
+    public LeaveService(LeaveRepository leaveRepository, LeaveMapper leaveMapper, EmployeeRepository employeeRepository, SecurityService securityService, LeaveBalanceRepository leaveBalanceRepository, UserRepository userRepository){
         this.leaveRepository = leaveRepository;
         this.leaveMapper = leaveMapper;
         this.employeeRepository = employeeRepository;
         this.securityService = securityService;
         this.leaveBalanceRepository = leaveBalanceRepository;
+        this.userRepository = userRepository;
     }
 
     //UNTUK KARYAWAN MELAKUKAN PENGAJUAN CUTI
@@ -161,7 +165,12 @@ public class LeaveService {
             leaveBalanceRepository.save(leaveBalance);
         }
 
-        leave.setApprovedBy(Role.ROLE_HC_MANAGER);
+        Long userId = securityService.getCurrentUserId();
+
+        User currentUser = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFound("User tidak ditemukan!"));
+
+        leave.setApprovedBy(currentUser);
         leave.setStatus(status);
 
         leaveRepository.save(leave);

@@ -42,6 +42,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Overtime> overtimeList;
 
+    @OneToMany(mappedBy = "user")
+    private List<Leave> leaveList;
+
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 }
