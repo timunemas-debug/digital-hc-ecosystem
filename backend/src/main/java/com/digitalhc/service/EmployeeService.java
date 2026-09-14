@@ -23,6 +23,7 @@ import com.digitalhc.repository.AttendanceRepository;
 import com.digitalhc.repository.EmployeeRepository;
 import com.digitalhc.repository.LeaveRepository;
 import com.digitalhc.repository.PositionRepository;
+import com.digitalhc.security.SecurityService;
 
 @Service
 public class EmployeeService {
@@ -34,8 +35,9 @@ public class EmployeeService {
     private final AttendanceRepository attendanceRepository;
     private final LeaveRepository leaveRepository;
     private final PositionRepository positionRepository;
+    private final SecurityService securityService;
 
-    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, UpdateEmployeeMapper updateEmployeeMapper, PositionService positionService, AttendanceRepository attendanceRepository, LeaveRepository leaveRepository, PositionRepository positionRepository){
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, UpdateEmployeeMapper updateEmployeeMapper, PositionService positionService, AttendanceRepository attendanceRepository, LeaveRepository leaveRepository, PositionRepository positionRepository, SecurityService securityService){
         this.employeeRepository = employeeRepository;
         this.employeeMapper = employeeMapper;
         this.updateEmployeeMapper = updateEmployeeMapper;
@@ -43,6 +45,7 @@ public class EmployeeService {
         this.attendanceRepository = attendanceRepository;
         this.leaveRepository = leaveRepository;
         this.positionRepository = positionRepository;
+        this.securityService = securityService;
     }
 
     public EmployeeResponse addEmployee(EmployeeRequest request){
@@ -114,8 +117,10 @@ public class EmployeeService {
         employeeRepository.deleteById(employeeId);
     }
 
-    public UpdateEmployeeResponse updateProfileEmployee(Long employeeId, UpdateEmployeeRequest request){
+    public UpdateEmployeeResponse updateProfileEmployee(UpdateEmployeeRequest request){
         
+        Long employeeId = securityService.getCurrentUserId();
+
         Employee employee = getEmployeeById(employeeId);
 
         employee.setNik(request.getNik());

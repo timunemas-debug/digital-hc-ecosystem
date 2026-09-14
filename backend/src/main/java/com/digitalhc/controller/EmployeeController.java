@@ -77,8 +77,9 @@ public class EmployeeController {
     }
 
     @PatchMapping("/{employeeId}/update-employee")
-    public UpdateEmployeeResponse updateProfileEmployee(@PathVariable Long employeeId, @Valid @RequestBody UpdateEmployeeRequest request){
-        return employeeService.updateProfileEmployee(employeeId, request);
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public UpdateEmployeeResponse updateProfileEmployee(@Valid @RequestBody UpdateEmployeeRequest request){
+        return employeeService.updateProfileEmployee(request);
     }
 
     @PatchMapping("/{employeeId}/assignPosition")

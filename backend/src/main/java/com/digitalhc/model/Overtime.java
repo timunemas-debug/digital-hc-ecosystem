@@ -46,8 +46,9 @@ public class Overtime {
     @Enumerated(EnumType.STRING)
     private OverTimeStatus status;
 
-    @Enumerated(EnumType.STRING)
-    private Role approvedBy;
+    @ManyToOne
+    @JoinColumn(name = "approved_by")
+    private User approvedBy;
 
     private LocalDateTime approvedAt;
 

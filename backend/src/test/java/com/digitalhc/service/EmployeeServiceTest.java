@@ -25,6 +25,7 @@ import com.digitalhc.model.EmployeeStatus;
 import com.digitalhc.model.Position;
 import com.digitalhc.repository.EmployeeRepository;
 import com.digitalhc.repository.PositionRepository;
+import com.digitalhc.security.SecurityService;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
@@ -40,6 +41,9 @@ public class EmployeeServiceTest {
 
     @Mock
     PositionRepository positionRepository;
+
+    @Mock
+    SecurityService securityService;
 
     @InjectMocks
     EmployeeService employeeService;
@@ -312,6 +316,9 @@ public class EmployeeServiceTest {
         response.setNik(2L);
         response.setNamaLengkapEmployee("Pretty");
 
+        when(securityService.getCurrentUserId())
+                .thenReturn(1L);
+
         when(employeeRepository.findById(1L))
                 .thenReturn(Optional.of(employee));
 
@@ -321,7 +328,7 @@ public class EmployeeServiceTest {
         when(updateEmployeeMapper.mapToResponse(employee))
                 .thenReturn(response);
 
-        UpdateEmployeeResponse result = employeeService.updateProfileEmployee(1L, request);
+        UpdateEmployeeResponse result = employeeService.updateProfileEmployee(request);
 
         assertEquals(2L, result.getNik());
         assertEquals("Pretty", result.getNamaLengkapEmployee());

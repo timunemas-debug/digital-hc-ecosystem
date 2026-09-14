@@ -54,7 +54,7 @@ public class AttendanceService {
     @Transactional
     public AttendanceResponse checkIn(){
         
-        Long employeeId = securityService.getCurrentEmployeeId();
+        Long employeeId = securityService.getCurrentUserId();
         Employee employee = getEmployeeById(employeeId);
         LocalDate today = LocalDate.now(ZONE_JAKARTA);
         LocalDateTime now = LocalDateTime.now(ZONE_JAKARTA);
@@ -94,7 +94,7 @@ public class AttendanceService {
         LocalDateTime now = LocalDateTime.now(ZONE_JAKARTA);
         LocalTime checkOut = now.toLocalTime();
 
-        Long employeeId = securityService.getCurrentEmployeeId();
+        Long employeeId = securityService.getCurrentUserId();
         getEmployeeById(employeeId);
 
         Attendance attendance = attendanceRepository.findByEmployeeEmployeeIdAndAttendanceDate(employeeId, today)

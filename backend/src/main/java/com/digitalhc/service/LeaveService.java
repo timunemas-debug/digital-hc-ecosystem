@@ -45,7 +45,7 @@ public class LeaveService {
     @Transactional
     public LeaveResponse addLeave(LeaveRequest request){
 
-        Long employeeId = securityService.getCurrentEmployeeId();
+        Long employeeId = securityService.getCurrentUserId();
 
         Employee employee = employeeRepository.findByEmployeeIdWithLock(employeeId)
                 .orElseThrow(() -> new ResourceNotFound("Employee tidak ditemukan!"));

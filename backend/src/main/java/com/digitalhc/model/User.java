@@ -1,5 +1,7 @@
 package com.digitalhc.model;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -7,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -35,6 +38,9 @@ public class User {
     @OneToOne
     @JoinColumn(name = "employee_id", unique = true)
     private Employee employee;
+
+    @OneToMany(mappedBy = "user")
+    private List<Overtime> overtimeList;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;

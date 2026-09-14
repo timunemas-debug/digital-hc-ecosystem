@@ -13,8 +13,8 @@ public class SecurityService {
 
         return (CustomUserDetails) authentication.getPrincipal();
     }
-    
-    public Long getCurrentEmployeeId(){
+
+    public Long getCurrentUserId(){
         return getCurrentUser().getUserId();
     }
 

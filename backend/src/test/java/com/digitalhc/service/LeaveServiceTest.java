@@ -75,7 +75,7 @@ public class LeaveServiceTest {
         response.setStartDateLeave(LocalDate.of(2026, 7, 5));
         response.setStatus(LeaveStatus.SUBMITTED);
 
-        when(securityService.getCurrentEmployeeId())
+        when(securityService.getCurrentUserId())
                 .thenReturn(1L);
 
         when(leaveBalanceRepository.findByEmployeeEmployeeId(1L))

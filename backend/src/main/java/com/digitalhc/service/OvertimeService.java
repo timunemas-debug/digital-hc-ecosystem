@@ -18,9 +18,13 @@ import com.digitalhc.model.Employee;
 import com.digitalhc.model.OverTimeStatus;
 import com.digitalhc.model.Overtime;
 import com.digitalhc.model.Role;
+import com.digitalhc.model.User;
 import com.digitalhc.repository.AttendanceRepository;
 import com.digitalhc.repository.EmployeeRepository;
 import com.digitalhc.repository.OvertimeRepository;
+import com.digitalhc.repository.UserRepository;
+import com.digitalhc.security.CustomUserDetails;
+import com.digitalhc.security.SecurityService;
 
 @Service
 public class OvertimeService {
@@ -29,16 +33,22 @@ public class OvertimeService {
     private final OvertimeMapper overtimeMapper;
     private final AttendanceRepository attendanceRepository;
     private final EmployeeRepository employeeRepository;
+    private final SecurityService securityService;
+    private final UserRepository userRepository;
 
-    public OvertimeService(OvertimeRepository overtimeRepository, OvertimeMapper overtimeMapper, AttendanceRepository attendanceRepository, EmployeeRepository employeeRepository){
+    public OvertimeService(OvertimeRepository overtimeRepository, OvertimeMapper overtimeMapper, AttendanceRepository attendanceRepository, EmployeeRepository employeeRepository, SecurityService securityService, UserRepository userRepository){
         this.overtimeRepository = overtimeRepository;
         this.overtimeMapper = overtimeMapper;
         this.attendanceRepository = attendanceRepository;
         this.employeeRepository = employeeRepository;
+        this.securityService = securityService;
+        this.userRepository = userRepository;
     }
 
     @Transactional
-    public OvertimeResponse addOvertime(Long employeeId, OvertimeRequest request){
+    public OvertimeResponse addOvertime(OvertimeRequest request){
+
+        Long employeeId = securityService.getCurrentUserId();
 
         Employee employee = employeeRepository.findByEmployeeIdWithLock(employeeId)
                 .orElseThrow(() -> new ResourceNotFound("Employee tidak ditemukan!"));
@@ -106,7 +116,12 @@ public class OvertimeService {
             throw new BadRequestException("Overtime sudah di proses!");
         }
 
-        overtime.setApprovedBy(Role.ROLE_HC_MANAGER);
+        Long userId = securityService.getCurrentUserId();
+
+        User currentUser = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFound("User dengan id tersebut tidak ditemukan!"));
+
+        overtime.setApprovedBy(currentUser);
         overtime.setStatus(status);
         overtime.setApprovedAt(LocalDateTime.now());
 
