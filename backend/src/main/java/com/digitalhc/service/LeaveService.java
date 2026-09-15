@@ -18,7 +18,6 @@ import com.digitalhc.model.EmployeeStatus;
 import com.digitalhc.model.Leave;
 import com.digitalhc.model.LeaveBalance;
 import com.digitalhc.model.LeaveStatus;
-import com.digitalhc.model.Role;
 import com.digitalhc.model.User;
 import com.digitalhc.repository.EmployeeRepository;
 import com.digitalhc.repository.LeaveBalanceRepository;
@@ -141,7 +140,7 @@ public class LeaveService {
             throw new BadRequestException("Employee sudah tidak aktif!");
         }
 
-        if (leave.getApprovedBy() != null) {
+        if (leave.getAprovedBy() != null) {
             throw new BadRequestException("Leave sudah di proses");
         }
 
@@ -170,10 +169,9 @@ public class LeaveService {
         User currentUser = userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFound("User tidak ditemukan!"));
 
-        leave.setApprovedBy(currentUser);
+        leave.setAprovedBy(currentUser);
         leave.setStatus(status);
 
         leaveRepository.save(leave);
     }
-
 }

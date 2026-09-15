@@ -112,7 +112,7 @@ public class OvertimeService {
             throw new BadRequestException("Status hanya dapat menjadi approved atau rejected");
         }
 
-        if (overtime.getApprovedBy() != null) {
+        if (overtime.getAprovedBy() != null) {
             throw new BadRequestException("Overtime sudah di proses!");
         }
 
@@ -121,7 +121,7 @@ public class OvertimeService {
         User currentUser = userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFound("User dengan id tersebut tidak ditemukan!"));
 
-        overtime.setApprovedBy(currentUser);
+        overtime.setAprovedBy(currentUser);
         overtime.setStatus(status);
         overtime.setApprovedAt(LocalDateTime.now());
 

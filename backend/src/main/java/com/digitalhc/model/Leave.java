@@ -37,6 +37,6 @@ public class Leave {
     private LeaveStatus status;
 
     @ManyToOne()
-    @JoinColumn(name = "approved_by")
-    private User approvedBy;
+    @JoinColumn(name = "user_id")
+    private User aprovedBy;
 }

@@ -47,8 +47,8 @@ public class Overtime {
     private OverTimeStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "approved_by")
-    private User approvedBy;
+    @JoinColumn(name = "user_id")
+    private User aprovedBy;
 
     private LocalDateTime approvedAt;
 

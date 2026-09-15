@@ -21,7 +21,7 @@ public interface LeaveRepository extends JpaRepository<Leave, Long>{
     Long countByStartDateLeave(LocalDate date);
 
     List<Leave> findByEmployeeEmployeeId(Long employeeId);
-    List<Leave> findByStatusLeave(LeaveStatus status);
+    List<Leave> findByStatus(LeaveStatus status);
 
     boolean existsByEmployeeEmployeeIdAndStatusAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(Long employeeId, LeaveStatus status, LocalDate startDateLeave, LocalDate endDateLeave);
 

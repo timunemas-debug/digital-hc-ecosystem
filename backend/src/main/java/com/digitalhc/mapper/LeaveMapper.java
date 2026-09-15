@@ -24,7 +24,7 @@ public class LeaveMapper {
                                  leave.getEndDateLeave(),
                                  leave.getReasonLeave(),
                                  leave.getStatus(),
-                                 leave.getApprovedBy()
+                                 leave.getAprovedBy()
                                 );
     }
 }

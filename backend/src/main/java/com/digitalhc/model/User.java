@@ -39,10 +39,10 @@ public class User {
     @JoinColumn(name = "employee_id", unique = true)
     private Employee employee;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "aprovedBy")
     private List<Overtime> overtimeList;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "aprovedBy")
     private List<Leave> leaveList;
 
     @Enumerated(EnumType.STRING)
