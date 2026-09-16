@@ -3,40 +3,38 @@ package com.digitalhc.model;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class Leave {
+public class Permission {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long leaveId;
+    private Long permissionId;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    private LocalDate startDateLeave;
-    private LocalDate endDateLeave;
-    private String reasonLeave;
-    private LeaveStatus status;
+    private LocalDate startDatePermission;
+    private LocalDate endDatePermission;
+    private String reason;
+    private PermissionStatus status;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User aprovedBy;
+
+    public Permission(){
+    }
 }

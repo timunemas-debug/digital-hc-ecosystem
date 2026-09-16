@@ -31,7 +31,7 @@ public class NotificationService {
         this.securityService = securityService;
     }
 
-    public void createdNotification(Long userId, String message){
+    public void createNotification(Long userId, String message){
 
         User user = userService.getUserById(userId);
 

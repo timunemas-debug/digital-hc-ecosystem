@@ -34,14 +34,16 @@ public class LeaveService {
     private final SecurityService securityService;
     private final LeaveBalanceRepository leaveBalanceRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
-    public LeaveService(LeaveRepository leaveRepository, LeaveMapper leaveMapper, EmployeeRepository employeeRepository, SecurityService securityService, LeaveBalanceRepository leaveBalanceRepository, UserRepository userRepository){
+    public LeaveService(LeaveRepository leaveRepository, LeaveMapper leaveMapper, EmployeeRepository employeeRepository, SecurityService securityService, LeaveBalanceRepository leaveBalanceRepository, UserRepository userRepository, NotificationService notificationService){
         this.leaveRepository = leaveRepository;
         this.leaveMapper = leaveMapper;
         this.employeeRepository = employeeRepository;
         this.securityService = securityService;
         this.leaveBalanceRepository = leaveBalanceRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     //UNTUK KARYAWAN MELAKUKAN PENGAJUAN CUTI
@@ -172,6 +174,7 @@ public class LeaveService {
         leave.setAprovedBy(currentUser);
         leave.setStatus(status);
 
+        notificationService.createNotification(employee.getUser().getUserId(), "Leave anda " + status);
         leaveRepository.save(leave);
     }
 }
