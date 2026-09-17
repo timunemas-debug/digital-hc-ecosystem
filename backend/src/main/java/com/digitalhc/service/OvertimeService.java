@@ -17,13 +17,11 @@ import com.digitalhc.model.Attendance;
 import com.digitalhc.model.Employee;
 import com.digitalhc.model.OverTimeStatus;
 import com.digitalhc.model.Overtime;
-import com.digitalhc.model.Role;
 import com.digitalhc.model.User;
 import com.digitalhc.repository.AttendanceRepository;
 import com.digitalhc.repository.EmployeeRepository;
 import com.digitalhc.repository.OvertimeRepository;
 import com.digitalhc.repository.UserRepository;
-import com.digitalhc.security.CustomUserDetails;
 import com.digitalhc.security.SecurityService;
 
 @Service

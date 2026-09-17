@@ -23,9 +23,22 @@ public interface LeaveRepository extends JpaRepository<Leave, Long>{
     List<Leave> findByEmployeeEmployeeId(Long employeeId);
     List<Leave> findByStatus(LeaveStatus status);
 
-    boolean existsByEmployeeEmployeeIdAndStatusAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(Long employeeId, LeaveStatus status, LocalDate startDateLeave, LocalDate endDateLeave);
+    boolean existsByEmployeeEmployeeIdAndStatusInAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(Long employeeId, List<LeaveStatus> status, LocalDate startDateLeave, LocalDate endDateLeave);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT l FROM Leave l WHERE l.leaveId = :leaveId")
     Optional<Leave> findByLeaveIdWithLock(@Param("leaveId") Long leaveId);
+
+    @Query ("""
+            SELECT COUNT(l)
+            FROM Leave l
+            WHERE l.employee.employeeId = :employeeId
+            AND l.startDateLeave >= :startDate
+            AND l.startDateLeave < :nextMonth
+            AND l.status IN :statuses
+    """)
+    long countLeaveByEmployeeAndMonth(@Param("employeeId") Long employeeId,
+                                      @Param("startDate") LocalDate startDate,
+                                      @Param("nextMonth") LocalDate nextMonth,
+                                      @Param("statuses") List<LeaveStatus> statuses);
 }

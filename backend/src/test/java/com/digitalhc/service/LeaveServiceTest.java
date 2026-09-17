@@ -1,6 +1,7 @@
 package com.digitalhc.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
@@ -53,7 +54,7 @@ public class LeaveServiceTest {
         Employee employee = new Employee();
         employee.setEmployeeId(1L);
         employee.setNamaLengkapEmployee("Jeremy");
-        employee.setTanggalBergabungEmployee(LocalDate.of(2, 4, 12));
+        employee.setTanggalBergabungEmployee(LocalDate.of(2022, 4, 12));
         employee.setStatus(EmployeeStatus.AKTIF);
 
         LeaveBalance leaveBalance = new LeaveBalance();
@@ -68,7 +69,7 @@ public class LeaveServiceTest {
         LeaveRequest request = new LeaveRequest();
         request.setReasonLeave("Test");
         request.setStartDateLeave(LocalDate.of(2026, 7, 5));
-        request.setEndDateLeave(LocalDate.of(2026, 7, 7));
+        request.setEndDateLeave(LocalDate.of(2026, 7, 6));
 
         LeaveResponse response = new LeaveResponse();
         response.setReasonLeave("Test");
@@ -81,14 +82,14 @@ public class LeaveServiceTest {
         when(leaveBalanceRepository.findByEmployeeEmployeeId(1L))
                 .thenReturn(Optional.of(leaveBalance));
 
-        when(leaveRepository.existsByEmployeeEmployeeIdAndStatusAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(1L, LeaveStatus.SUBMITTED, request.getStartDateLeave(), request.getEndDateLeave()))
+        when(leaveRepository.existsByEmployeeEmployeeIdAndStatusInAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(eq(1L), eq(List.of(LeaveStatus.SUBMITTED, LeaveStatus.APPROVED)), eq(request.getStartDateLeave()), eq(request.getEndDateLeave())))
                 .thenReturn(false);
+
+        when(leaveRepository.countLeaveByEmployeeAndMonth(eq(1L), eq(LocalDate.of(2026, 7, 1)), eq(LocalDate.of(2026, 8, 1)), eq(List.of(LeaveStatus.SUBMITTED, LeaveStatus.APPROVED))))
+                .thenReturn(1L);
 
         when(employeeRepository.findByEmployeeIdWithLock(1L))
                 .thenReturn(Optional.of(employee));
-
-        when(leaveRepository.countByEmployeeAndStatus(employee, LeaveStatus.SUBMITTED))
-                .thenReturn(1L);
 
         when(leaveMapper.toEntity(request))
                 .thenReturn(leave);
@@ -104,7 +105,6 @@ public class LeaveServiceTest {
         assertEquals("Test", result.getReasonLeave());
         assertEquals(LocalDate.of(2026, 7, 5), result.getStartDateLeave());
 
-        verify(leaveRepository).countByEmployeeAndStatus(employee, LeaveStatus.SUBMITTED);
         verify(leaveMapper).toEntity(request);
         verify(leaveMapper).toResponse(leave);
         verify(leaveRepository).save(leave);

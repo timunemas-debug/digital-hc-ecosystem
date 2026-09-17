@@ -49,41 +49,57 @@ public class LeaveService {
     //UNTUK KARYAWAN MELAKUKAN PENGAJUAN CUTI
     @Transactional
     public LeaveResponse addLeave(LeaveRequest request){
-
+        
         Long employeeId = securityService.getCurrentUserId();
-
+        
         Employee employee = employeeRepository.findByEmployeeIdWithLock(employeeId)
-                .orElseThrow(() -> new ResourceNotFound("Employee tidak ditemukan!"));
-
-        Optional<LeaveBalance> leaveBalance = leaveBalanceRepository.findByEmployeeEmployeeId(employeeId);
-
-        boolean hasActiveLeave = leaveRepository.existsByEmployeeEmployeeIdAndStatusAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(employeeId, LeaveStatus.SUBMITTED, request.getStartDateLeave(), request.getEndDateLeave());
-
-        if (hasActiveLeave) {
-            throw new BadRequestException("Pegawai sudah memiliki cuti ditanggal tersebut!");
-        }
-
+        .orElseThrow(() -> new ResourceNotFound("Employee tidak ditemukan!"));
+        
         if (employee.getStatus() != EmployeeStatus.AKTIF) {
             throw new BadRequestException("Employee tidak aktif!");
         }
+        if (employee.getTanggalBergabungEmployee() == null) {
+            throw new BadRequestException("Tanggal bergabung belum tersedia!");
+        }
+        
+        if (request.getStartDateLeave().isAfter(request.getEndDateLeave())) {
+            throw new BadRequestException("Tanggal request anda tidak valid!");
+        }
+        
+        int totalDays = (int) ChronoUnit.DAYS.between(request.getStartDateLeave(), request.getEndDateLeave()) + 1;
 
+        if (totalDays > 2) {
+            throw new BadRequestException("Request leave hanya boleh 2 hari!");
+        }
+
+        LocalDate tanggalBergabung = employee.getTanggalBergabungEmployee();
+        
+        if (LocalDate.now().isBefore(tanggalBergabung.plusYears(1))) {
+            throw new BadRequestException("Karyawan belum 1 tahun bekerja!");
+        }
+        
+        Optional<LeaveBalance> leaveBalance = leaveBalanceRepository.findByEmployeeEmployeeId(employeeId);
+        
         if (leaveBalance.isEmpty()) {
             throw new BadRequestException("Anda tidak memiliki leave balance!");
         }
 
-        if (employee.getTanggalBergabungEmployee() == null) {
-            throw new BadRequestException("Tanggal bergabung belum tersedia!");
+        List<LeaveStatus> activeStatuses = List.of(LeaveStatus.SUBMITTED, LeaveStatus.APPROVED);
+
+        boolean hasActiveLeave = leaveRepository.existsByEmployeeEmployeeIdAndStatusInAndStartDateLeaveLessThanEqualAndEndDateLeaveGreaterThanEqual(employeeId, activeStatuses, request.getStartDateLeave(), request.getEndDateLeave());
+
+        if (hasActiveLeave) {
+            throw new BadRequestException("Pegawai sudah memiliki cuti ditanggal tersebut!");
         }
-
-        LocalDate tanggalBergabung = employee.getTanggalBergabungEmployee();
-        long pendingLeave = leaveRepository.countByEmployeeAndStatus(employee, LeaveStatus.SUBMITTED);
-
-        if(pendingLeave >= 2){
-            throw new BadRequestException("Sedang menunggu persetujuan...");
-        }
-
-        if (LocalDate.now().isBefore(tanggalBergabung.plusYears(1))) {
-            throw new BadRequestException("Karyawan belum 1 tahun bekerja!");
+        
+        List<LeaveStatus> statuses = List.of(LeaveStatus.SUBMITTED, LeaveStatus.APPROVED);
+        LocalDate startOfMonth = request.getStartDateLeave().withDayOfMonth(1);
+        LocalDate startOfNextMonth = startOfMonth.plusMonths(1);
+        
+        long totalLeave = leaveRepository.countLeaveByEmployeeAndMonth(employeeId, startOfMonth, startOfNextMonth, statuses);
+        
+        if (totalLeave >= 2) {
+            throw new BadRequestException("Maksimal 2 pengajuan dalam sebulan!");
         }
 
         Leave leave = leaveMapper.toEntity(request);
@@ -149,13 +165,12 @@ public class LeaveService {
         if (status == LeaveStatus.APPROVED) {
             Long employeeId = employee.getEmployeeId();
 
-            LeaveBalance leaveBalance = leaveBalanceRepository.findByEmployeeEmployeeId(employeeId)
+            LeaveBalance leaveBalance = leaveBalanceRepository.findByEmployeeEmployeeIdWithLock(employeeId)
                     .orElseThrow(() -> new ResourceNotFound("Leave balance employee tidak ditemukan!"));
 
             int availableLeaves = leaveBalance.getTotalLeaves() - leaveBalance.getUsedLeaves();
 
             int totalDays = (int) ChronoUnit.DAYS.between(leave.getStartDateLeave(), leave.getEndDateLeave()) + 1;
-
 
             if (availableLeaves < totalDays) {
                 throw new BadRequestException("Saldo leave tidak cukup!");

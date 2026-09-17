@@ -1,6 +1,5 @@
 package com.digitalhc.model;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
