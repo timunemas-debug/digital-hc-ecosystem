@@ -74,7 +74,6 @@ public class PermissionService {
         
         return permissionRepository.findById(permissionId)
             .orElseThrow(() -> new ResourceNotFound("Permission tidak ditemukan!"));
-
     }
 
     public List<PermissionResponse> findPermissionByEmployeeId(Long employeeId){
