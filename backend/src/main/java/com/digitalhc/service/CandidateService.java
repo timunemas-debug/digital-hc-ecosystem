@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.digitalhc.DTO.request.CandidateRequest;
 import com.digitalhc.DTO.response.CandidateResponse;
+import com.digitalhc.exception.BadRequestException;
 import com.digitalhc.exception.ResourceNotFound;
 import com.digitalhc.mapper.CandidateMapper;
 import com.digitalhc.model.Candidate;
@@ -55,6 +56,17 @@ public class CandidateService {
 
         Candidate candidate = candidateRepository.findById(candidateId)
             .orElseThrow(() -> new ResourceNotFound("Candidate dengan id tersebut tidak ditemukan!"));
-    }
 
+        if (candidate.getStatus() == null) {
+            throw new BadRequestException("Status candidate null!");
+        }
+
+        if (candidate.getStatus() != StatusCandidate.IMPORTED) {
+            throw new BadRequestException("Candidate sudah melewati prosess ini!");
+        }
+
+        candidate.setStatus(status);
+
+        return candidateMapper.toMapResponse(candidateRepository.save(candidate));
+    }
 }
