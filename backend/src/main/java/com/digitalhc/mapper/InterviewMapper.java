@@ -12,7 +12,6 @@ public class InterviewMapper {
     public Interview toEntity(InterviewRequest request){
         Interview interview = new Interview();
         interview.setJadwalInterview(request.getJadwalInterview());
-        interview.setStatus(request.getStatus());
 
         return interview;
     }
