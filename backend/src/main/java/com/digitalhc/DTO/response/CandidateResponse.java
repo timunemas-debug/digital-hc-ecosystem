@@ -1,6 +1,7 @@
 package com.digitalhc.DTO.response;
 
 import com.digitalhc.model.Graduate;
+import com.digitalhc.model.KotaCandidate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,5 +19,6 @@ public class CandidateResponse {
     private String nomerHp;
     private String pengalamanKerja;
     private String domisili;
+    private KotaCandidate kota;
     private Graduate pendidikanTerakhir;
 }

@@ -1,6 +1,7 @@
 package com.digitalhc.DTO.request;
 
 import com.digitalhc.model.Graduate;
+import com.digitalhc.model.KotaCandidate;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -27,6 +28,9 @@ public class CandidateRequest {
 
     @NotBlank(message = "Domisili tidak boleh kosong!")
     private String domisili;
+
+    @NotNull(message = "Kota tidak boleh kosong!")
+    private KotaCandidate kota;
 
     @NotNull(message = "Pendidikan terakhir wajib di isi!")
     private Graduate pendidikanTerakhir;

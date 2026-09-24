@@ -28,6 +28,7 @@ public class CandidateMapper {
                                      candidate.getNomerHp(),
                                      candidate.getPengalamanKerja(),
                                      candidate.getDomisili(),
+                                     candidate.getKota(),
                                      candidate.getPendidikanTerakhir());
     }
 }

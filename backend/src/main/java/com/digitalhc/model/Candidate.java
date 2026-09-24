@@ -27,6 +27,9 @@ public class Candidate {
     private String nomerHp;
     private String pengalamanKerja;
     private String domisili;
+    
+    @Enumerated(EnumType.STRING)
+    private KotaCandidate kota;
 
     @Enumerated(EnumType.STRING)
     private Graduate pendidikanTerakhir;
