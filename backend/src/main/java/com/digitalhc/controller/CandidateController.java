@@ -1,9 +1,22 @@
 package com.digitalhc.controller;
 
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.digitalhc.DTO.request.CandidateRequest;
+import com.digitalhc.DTO.response.CandidateResponse;
+import com.digitalhc.model.StatusCandidate;
 import com.digitalhc.service.CandidateService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/candidate")
@@ -13,5 +26,26 @@ public class CandidateController {
 
     public CandidateController(CandidateService candidateService){
         this.candidateService = candidateService;
+    }
+
+    @PreAuthorize("hasRole('')")
+    @PostMapping("/add-candidate")
+    public CandidateResponse addCandidate(@Valid @RequestBody CandidateRequest request){
+        return candidateService.addCandidate(request);
+    }
+
+    @GetMapping("/all-candidate")
+    public List<CandidateResponse> getAll(){
+        return candidateService.getAllCandidate();
+    }
+
+    @DeleteMapping("/{candidateId}/delete")
+    public void deleteCandidate(@PathVariable Long candidateId){
+        candidateService.deleteCandidate(candidateId);
+    }
+
+    @PostMapping("/{candidateId}/update-candidate/{status}")
+    public CandidateResponse updateCandidate(@PathVariable Long candidateId, @PathVariable StatusCandidate status){
+        return candidateService.updateCandidateStatus(candidateId, status);
     }
 }

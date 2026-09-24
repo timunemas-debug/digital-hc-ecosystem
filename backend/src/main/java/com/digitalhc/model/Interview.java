@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,33 +18,23 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Candidate {
+public class Interview {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long candidateId;
+    private Long interviewId;
 
-    private String nama;
-    private String email;
-    private String nomerHp;
-    private String pengalamanKerja;
-    private String domisili;
+    private LocalDateTime jadwalInterview;
+
+    @Enumerated(EnumType.STRING)
+    private InterviewStatus status;
     
-    @Enumerated(EnumType.STRING)
-    private KotaCandidate kota;
-
-    @Enumerated(EnumType.STRING)
-    private Graduate pendidikanTerakhir;
-
-    @Enumerated(EnumType.STRING)
-    private StatusCandidate status;
-
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "candidate")
-    private Interview interview;
-    
-    public Candidate(){
+    @OneToOne
+    @JoinColumn(name = "candidateId")
+    private Candidate candidate;
+
+    public Interview(){
     }
 }
