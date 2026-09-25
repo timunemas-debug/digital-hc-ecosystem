@@ -13,6 +13,7 @@ public class SelectionMapper {
 
         Selection selection = new Selection();
         selection.setMessage(request.getMessage());
+        selection.setStatus(request.getStatus());
 
         return selection;
     }
