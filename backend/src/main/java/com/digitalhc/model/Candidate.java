@@ -43,6 +43,9 @@ public class Candidate {
 
     @OneToOne(mappedBy = "candidate")
     private Interview interview;
+
+    @OneToOne(mappedBy = "candidate")
+    private Selection selection;
     
     public Candidate(){
     }

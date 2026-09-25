@@ -5,5 +5,6 @@ public enum StatusCandidate {
     SCREENING,
     INTERVIEW,
     PASSED,
+    REJECTED,
     HIRED
 }

@@ -56,6 +56,7 @@ public class CandidateService {
         CsvParserSettings settings = new CsvParserSettings();
         settings.setHeaderExtractionEnabled(true);
         CsvParser parser = new CsvParser(settings);
+        
         List<Record> parseAllRecords = parser.parseAllRecords(inputStream);
         parseAllRecords.forEach(record -> {
             
