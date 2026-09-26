@@ -1,5 +1,6 @@
 package com.digitalhc.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,10 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.digitalhc.DTO.request.CandidateRequest;
 import com.digitalhc.DTO.response.CandidateResponse;
+import com.digitalhc.model.KotaCandidate;
 import com.digitalhc.model.StatusCandidate;
 import com.digitalhc.service.CandidateService;
 
@@ -32,6 +36,11 @@ public class CandidateController {
     @PostMapping("/add-candidate")
     public CandidateResponse addCandidate(@Valid @RequestBody CandidateRequest request){
         return candidateService.addCandidate(request);
+    }
+
+    @PostMapping("/add-with-file")
+    public List<CandidateResponse> importCandidate(@RequestParam("file") MultipartFile file, @RequestParam("kota") KotaCandidate kota)throws IOException{
+        return candidateService.importCandidate(file, kota);
     }
 
     @GetMapping("/all-candidate")
