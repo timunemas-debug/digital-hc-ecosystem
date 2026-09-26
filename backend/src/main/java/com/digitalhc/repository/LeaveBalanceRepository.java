@@ -18,6 +18,6 @@ public interface LeaveBalanceRepository extends JpaRepository<LeaveBalance, Long
     boolean existsByEmployeeEmployeeId(Long employeeId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT lb FROM LeaveBalance WHERE lb.employeeId = :employeeId")
+    @Query("SELECT lb FROM LeaveBalance lb WHERE lb.employee.employeeId = :employeeId")
     Optional<LeaveBalance> findByEmployeeEmployeeIdWithLock(@Param("employeeId") Long employeeId);
 }

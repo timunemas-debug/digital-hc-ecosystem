@@ -39,6 +39,7 @@ public class PositionController {
         return positionService.getPositionResponse(positionId);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public List<PositionResponse> getALlPosition(){
         return positionService.getAllPosition();

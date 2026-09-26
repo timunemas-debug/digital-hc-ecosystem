@@ -15,6 +15,7 @@ import com.digitalhc.exception.BadRequestException;
 import com.digitalhc.exception.ResourceNotFound;
 import com.digitalhc.mapper.CandidateMapper;
 import com.digitalhc.model.Candidate;
+import com.digitalhc.model.Graduate;
 import com.digitalhc.model.KotaCandidate;
 import com.digitalhc.model.StatusCandidate;
 import com.digitalhc.repository.CandidateRepository;
@@ -67,15 +68,20 @@ public class CandidateService {
             candidate.setPengalamanKerja(record.getString("pengalamanKerja"));
             candidate.setDomisili(record.getString("domisili"));
 
+            String pendidikanString = record.getString("pendidikanTerakhir");
+            Graduate pendidikanCandidate = Graduate.valueOf(pendidikanString);
+            candidate.setPendidikanTerakhir(pendidikanCandidate);
+            
             String kotaString = record.getString("kota");
             KotaCandidate kotaCandidate = KotaCandidate.valueOf(kotaString);
             candidate.setKota(kotaCandidate);
-
+            
             if (candidate.getKota() == kota) {
                 candidate.setCreatedAt(LocalDateTime.now());
                 candidate.setStatus(StatusCandidate.IMPORTED);
                 candidates.add(candidate);
             }
+
         });
         List<Candidate> savedCandidate = candidateRepository.saveAll(candidates);
 

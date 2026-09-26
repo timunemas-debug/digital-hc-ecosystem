@@ -17,6 +17,7 @@ public class CandidateMapper {
         candidate.setNomerHp(request.getNomerHp());
         candidate.setPengalamanKerja(request.getPengalamanKerja());
         candidate.setDomisili(request.getDomisili());
+        candidate.setKota(request.getKota());
         candidate.setPendidikanTerakhir(request.getPendidikanTerakhir());
 
         return candidate;
