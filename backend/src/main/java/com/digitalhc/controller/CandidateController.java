@@ -32,27 +32,31 @@ public class CandidateController {
         this.candidateService = candidateService;
     }
 
-    @PreAuthorize("hasRole('')")
+    @PreAuthorize("hasRole('HC_OFFICER')")
     @PostMapping("/add-candidate")
     public CandidateResponse addCandidate(@Valid @RequestBody CandidateRequest request){
         return candidateService.addCandidate(request);
     }
 
+    @PreAuthorize("hasRole('HC_OFFICER')")
     @PostMapping("/add-with-file")
     public List<CandidateResponse> importCandidate(@RequestParam("file") MultipartFile file, @RequestParam("kota") KotaCandidate kota)throws IOException{
         return candidateService.importCandidate(file, kota);
     }
 
+    @PreAuthorize("hasRole('HC_OFFICER')")
     @GetMapping("/all-candidate")
     public List<CandidateResponse> getAll(){
         return candidateService.getAllCandidate();
     }
 
+    @PreAuthorize("hasRole('HC_OFFICER')")
     @DeleteMapping("/{candidateId}/delete")
     public void deleteCandidate(@PathVariable Long candidateId){
         candidateService.deleteCandidate(candidateId);
     }
 
+    @PreAuthorize("hasRole('HC_OFFICER')")
     @PostMapping("/{candidateId}/update-candidate/{status}")
     public CandidateResponse updateCandidate(@PathVariable Long candidateId, @PathVariable StatusCandidate status){
         return candidateService.updateCandidateStatus(candidateId, status);
