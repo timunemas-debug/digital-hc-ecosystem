@@ -32,11 +32,13 @@ public class CandidateService {
     private final CandidateRepository candidateRepository;
     private final CandidateMapper candidateMapper;
     private final SecurityService securityService;
+    private final EmailService emailService;
 
-    public CandidateService(CandidateRepository candidateRepository, CandidateMapper candidateMapper, SecurityService securityService){
+    public CandidateService(CandidateRepository candidateRepository, CandidateMapper candidateMapper, SecurityService securityService, EmailService emailService){
         this.candidateRepository = candidateRepository;
         this.candidateMapper = candidateMapper;
         this.securityService = securityService;
+        this.emailService = emailService;
     }
 
     @Transactional
