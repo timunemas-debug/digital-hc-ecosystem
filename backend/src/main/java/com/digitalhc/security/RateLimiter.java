@@ -2,6 +2,8 @@ package com.digitalhc.security;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,32 +18,35 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class RateLimiter extends OncePerRequestFilter{
  
-    private final Bucket bucket;
+    private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
 
-    public RateLimiter(){
-
+    public Bucket createBucket(){
         Bandwidth limit = Bandwidth.builder()
                 .capacity(5)
                 .refillGreedy(5, Duration.ofMinutes(1))
                 .build();
 
-        this.bucket = Bucket.builder()
-                .addLimit(limit)
-                .build();
+        return Bucket.builder()
+            .addLimit(limit)
+            .build();
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)throws ServletException, IOException{
-
+        
         if (!request.getRequestURI().equals("/auth/login")) {
             filterChain.doFilter(request, response);
             return;
         }
-
+        
         if (!request.getMethod().equals("POST")) {
             filterChain.doFilter(request, response);
             return ;
         }
+        
+        String ip = request.getRemoteAddr();
+        
+        Bucket bucket = buckets.computeIfAbsent(ip, key -> createBucket());
         
         if (!bucket.tryConsume(1)) {
             response.setStatus(429);
