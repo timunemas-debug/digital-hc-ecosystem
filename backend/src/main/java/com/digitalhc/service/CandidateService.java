@@ -121,4 +121,12 @@ public class CandidateService {
 
         return candidateMapper.toMapResponse(candidateRepository.save(candidate));
     }
+
+    public void sendEmailToCandidate(Long candidateId){
+
+        Candidate candidate = candidateRepository.findById(candidateId)
+            .orElseThrow(() -> new ResourceNotFound("Candidate dengan id tersebut tidak ditemukan!"));
+
+        emailService.sendEmailForCandidate(candidate.getEmail());
+    }
 }
