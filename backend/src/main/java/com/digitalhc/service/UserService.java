@@ -84,6 +84,32 @@ public class UserService {
         return updateUserMapper.toResponse(userRepository.save(user));
     }
 
+    public void updatePasswordUser(String password){
+
+        boolean firstCapital = Character.isUpperCase(password.charAt(0));
+        boolean longCharacter = password.length() > 5;
+        boolean hasSpecial = false;
+        String specialCharacter = "!@#$%^&*()_+-=";
+        
+        for(Character c : password.toCharArray()){
+
+            if (specialCharacter.indexOf(c) != -1) {
+                hasSpecial = true;
+            }
+        }
+        if (!firstCapital) {
+            throw new BadRequestException("Wajib memiliki huruf kapital didepan!");
+        }
+
+        if (!longCharacter) {
+            throw new BadRequestException("Jumlah character harus lebih dari 5!");
+        }
+
+        if (!hasSpecial) {
+            throw new BadRequestException("Wajib menambah character unique dipassword!");
+        }
+    }
+
     public UserResponse nonAktifUser(Long userId){
 
         User user = getUserById(userId);
