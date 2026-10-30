@@ -121,7 +121,6 @@ public class UserService {
 
         Long userId = securityService.getCurrentUserId();
 
-
         validationPasswordUser(request.getPassword());
 
         User user = userRepository.findById(userId)
