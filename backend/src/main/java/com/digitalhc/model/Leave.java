@@ -3,6 +3,8 @@ package com.digitalhc.model;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,6 +33,8 @@ public class Leave {
     private LocalDate startDateLeave;
     private LocalDate endDateLeave;
     private String reasonLeave;
+
+    @Enumerated(EnumType.STRING)
     private LeaveStatus status;
 
     @ManyToOne

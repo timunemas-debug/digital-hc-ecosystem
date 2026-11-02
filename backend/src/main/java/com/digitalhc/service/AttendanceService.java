@@ -123,7 +123,6 @@ public class AttendanceService {
     }
 
     public List<AttendanceResponse> getAllAttendance(){
-
         return attendanceRepository.findAll()
                 .stream()
                 .map(attendanceMapper::toResponse)
