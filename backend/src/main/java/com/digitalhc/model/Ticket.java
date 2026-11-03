@@ -26,6 +26,8 @@ public class Ticket {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    private Long createdBy;
+
     @Enumerated(EnumType.STRING)
     private StatusTicket statusTicket;
 

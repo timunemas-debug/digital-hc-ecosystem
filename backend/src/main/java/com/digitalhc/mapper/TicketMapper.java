@@ -13,13 +13,13 @@ public class TicketMapper {
 
         Ticket ticket = new Ticket();
         ticket.setMessage(request.getMessage());
-        ticket.setDepartment(request.getDepartment());
-
+        
         return ticket;
     }
 
     public TicketResponse mapToResponse(Ticket ticket){
         return new TicketResponse(ticket.getMessage(),
-                                  ticket.getStatusTicket());
+                                  ticket.getStatusTicket(),
+                                  ticket.getCreatedBy());
     }
 }
