@@ -1,5 +1,8 @@
 package com.digitalhc.model;
 
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -14,23 +17,32 @@ import lombok.Setter;
 @Getter
 @Setter 
 @AllArgsConstructor
+@Entity
 public class Ticket {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String subject;
+
     private String message;
 
     @ManyToOne
     @JoinColumn(name = "department_id")
-    private Department department;
+    private Department departmentPengirim;
 
-    private Long createdBy;
-
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department departmentTujuan;
+    
     @Enumerated(EnumType.STRING)
     private StatusTicket statusTicket;
 
+    private Long createdBy;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updateAt;
     public Ticket(){
     }
 }

@@ -12,14 +12,19 @@ public class TicketMapper {
     public Ticket toEntity(TicketRequest request){
 
         Ticket ticket = new Ticket();
+        ticket.setSubject(request.getSubject());
         ticket.setMessage(request.getMessage());
         
         return ticket;
     }
 
     public TicketResponse mapToResponse(Ticket ticket){
-        return new TicketResponse(ticket.getMessage(),
+        return new TicketResponse(ticket.getSubject(),
+                                  ticket.getMessage(),
                                   ticket.getStatusTicket(),
-                                  ticket.getCreatedBy());
+                                  ticket.getDepartmentPengirim(),
+                                  ticket.getCreatedBy(),
+                                  ticket.getCreatedAt(),
+                                  ticket.getUpdateAt());
     }
 }

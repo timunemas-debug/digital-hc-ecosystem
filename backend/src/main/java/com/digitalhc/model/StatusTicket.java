@@ -1,6 +1,6 @@
 package com.digitalhc.model;
 
-public enum StatusTIcket {
+public enum StatusTicket {
     SUBMITTED,
     APPROVED,
     REJECTED,
